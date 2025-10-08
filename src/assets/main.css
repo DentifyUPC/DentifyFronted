@@ -1,0 +1,15 @@
+@import "tailwindcss/preflight";
+@import "tailwindcss/utilities";
+
+
+/*color fondo: AACFF3 */
+body {
+    margin: 0;
+    background: transparent;
+    font-family: "Inter", sans-serif;
+}
+
+#app {
+    width: 100%;
+    height: 100%;
+}
