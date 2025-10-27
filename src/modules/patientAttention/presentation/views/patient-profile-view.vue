@@ -1,45 +1,82 @@
 <template>
-  <div class="p-6">
-    <h1 class="text-2xl font-bold text-teal-700 mb-4">Perfil del Paciente</h1>
+  <div class="p-8 bg-gray-50 min-h-screen">
+    <div v-if="isLoading" class="text-center text-gray-500">Cargando...</div>
 
-    <div v-if="isLoading">Cargando...</div>
+    <div v-else>
+      <!-- Perfil mostrado -->
+      <div v-if="patient" class="max-w-4xl mx-auto bg-white p-6 rounded-xl shadow">
+        <h1 class="text-2xl font-bold text-teal-700 mb-4">Perfil del Paciente</h1>
 
-    <div v-else-if="patient">
-      <p><strong>DNI / Carnet de Extranjería:</strong> {{ profile.username || '—' }}</p>
-      <p><strong>Nombre:</strong> {{ patient.firstName }} {{ patient.lastName }}</p>
-      <p><strong>Email:</strong> {{ patient.email || '—' }}</p>
-      <p><strong>Teléfono:</strong> {{ patient.phoneNumber || '—' }}</p>
-      <p><strong>Fecha de nacimiento:</strong> {{ patient.birthDate || '—' }}</p>
-      <p><strong>Edad:</strong> {{ patient.age || '—' }}</p>
-      <p><strong>Rol:</strong> {{ roleLabel }}</p>
-      <p><strong>Clínica:</strong> {{ clinicName || '—' }}</p>
-    </div>
+        <div class="space-y-2 text-gray-700">
+          <p><strong>Nombre:</strong> {{ patient.firstName }}</p>
+          <p><strong>Apellido:</strong> {{ patient.lastName }}</p>
+          <p><strong>Correo:</strong> {{ patient.email }}</p>
+          <p><strong>Género:</strong> {{ patient.gender || "—" }}</p>
+          <p><strong>Teléfono:</strong> {{ patient.phoneNumber || "—" }}</p>
+          <p>
+            <strong>Dirección:</strong>
+            {{ patient.street || "—" }}, {{ patient.district || "" }}, {{ patient.province || "" }}, {{ patient.department || "" }}
+          </p>
+        </div>
 
-    <div v-else class="text-red-500">
-      No se pudo cargar el perfil del paciente.
+        <div class="flex justify-end gap-3 mt-6">
+          <button
+              @click="openUpdateForm"
+              class="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition"
+          >
+            Actualizar información
+          </button>
+          <button
+              class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition"
+          >
+            Cambiar contraseña
+          </button>
+        </div>
+      </div>
+
+      <!-- Mensaje cuando no hay datos -->
+      <div
+          v-else
+          class="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow text-center mt-8"
+      >
+        <h2 class="text-xl font-semibold text-teal-700 mb-4">
+          Aún no has completado tu información
+        </h2>
+        <p class="text-gray-600 mb-6">
+          Por favor completa tus datos personales.
+        </p>
+        <button
+            @click="openUpdateForm"
+            class="bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition"
+        >
+          Completar información
+        </button>
+      </div>
+
+      <!-- ✅ Modal con Teleport -->
+      <Teleport to="body">
+        <updatePatientProfileComponent
+            v-if="showUpdateForm"
+            :user-profile="userProfile"
+            :patient="patient"
+            @close="showUpdateForm = false"
+            @updated="handleProfileUpdated"
+        />
+      </Teleport>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted } from "vue";
 import { patientRepositoryImpl } from "../../data/repositories/patientRepositoryImpl.js";
-import { clinicRepositoryImpl } from "@/modules/clinicManagement/data/repositories/clinicRepositoryImpl.js";
 import { authRepositoryImpl } from "@/modules/iam/data/repositories/authRepositoryImpl.js";
+import updatePatientProfileComponent from "@/modules/patientAttention/presentation/components/update-patient-profile-component.vue";
 
 const patient = ref(null);
-const profile = ref(null);
-const clinicName = ref("");
+const userProfile = ref(null);
 const isLoading = ref(true);
-
-const roleLabel = computed(() => {
-  switch (profile.value?.roleId) {
-    case 1: return "Administrador";
-    case 2: return "Odontólogo";
-    case 3: return "Paciente";
-    default: return "Desconocido";
-  }
-});
+const showUpdateForm = ref(false);
 
 onMounted(async () => {
   const user = JSON.parse(localStorage.getItem("user") || "null");
@@ -49,28 +86,77 @@ onMounted(async () => {
   }
 
   try {
-
-    profile.value = await authRepositoryImpl.getProfile(user.id);
-    console.log("✅ Perfil (general):", profile.value);
-
     patient.value = await patientRepositoryImpl.getProfile(user.id);
-    console.log("✅ Datos del paciente:", patient.value);
+  } catch (err) {
+    const status = err.response?.status;
+    if (status === 403 || status === 404) {
+      // 404: el paciente no existe aún
+      patient.value = null;
+    } else {
+      throw err;
+    }
+  }
 
-    if (profile.value.clinicId) {
-      try {
-        const clinics = await clinicRepositoryImpl.getClinicsForRegister();
-        const match = clinics.find(c => Number(c.id) === Number(profile.value.clinicId));
-        clinicName.value = match ? match.name : '';
-      } catch (err) {
-        console.warn("⚠️ No se pudo obtener la lista de clínicas:", err);
+
+  try {
+    userProfile.value = await authRepositoryImpl.getProfile(user.id);
+    try {
+      patient.value = await patientRepositoryImpl.getProfile(user.id);
+    } catch (err) {
+      if (err.response && err.response.status === 403) {
+        patient.value = null;
+      } else {
+        throw err;
       }
     }
-
   } catch (error) {
-    console.error("❌ Error cargando datos del paciente:", error);
-    patient.value = null;
+    console.error("❌ Error al cargar perfil:", error);
   } finally {
     isLoading.value = false;
   }
 });
+
+const handleProfileUpdated = async () => {
+  const user = JSON.parse(localStorage.getItem("user") || "null");
+  if (!user) return;
+  patient.value = await patientRepositoryImpl.getProfile(user.id);
+  showUpdateForm.value = false;
+};
+
+const openUpdateForm = () => {
+  showUpdateForm.value = true;
+};
+
+
 </script>
+
+<style scoped>
+/* Fondo general */
+body {
+  overflow-x: hidden;
+}
+
+/* Animación del modal */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Transición suave del overlay */
+.modal-overlay-enter-active,
+.modal-overlay-leave-active {
+  transition: opacity 0.25s ease;
+}
+
+.modal-overlay-enter-from,
+.modal-overlay-leave-to {
+  opacity: 0;
+}
+</style>
+

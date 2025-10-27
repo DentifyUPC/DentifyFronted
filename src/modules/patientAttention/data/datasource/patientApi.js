@@ -1,20 +1,29 @@
-import BaseService from "@/shared/serivces/baseService";
+import BaseService from "@/shared/serivces/baseService.js";
 
 class PatientApi extends BaseService {
     constructor() {
         super("/patients");
     }
 
+
     getByUserId(userId) {
         return this.get(`user/${userId}`);
     }
+
+
+    getByPatientId(patientId) {
+        return this.get(`${patientId}`);
+    }
+
 
     updatePatient(patientId, data) {
         return this.put(`${patientId}`, data);
     }
 
+
     getByClinicId(clinicId) {
-        return this.get(`clinics/${clinicId}/patients`);
+
+        return this.get(`/clinics/${clinicId}/patients`);
     }
 }
 

@@ -4,4 +4,6 @@ export class AuthRepository {
     async getProfile() {}
     async updateInformation(data) {}
     async updatePassword(data) {}
+    async registerOdontologist(data) {}
+
 }

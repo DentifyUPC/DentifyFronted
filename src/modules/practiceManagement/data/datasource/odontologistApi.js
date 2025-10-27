@@ -9,6 +9,9 @@ class OdontologistApi extends BaseService {
         return this.get(`user/${userId}`);
     }
 
+    getByOdontologistId(odontologistId) {
+        return this.get(`${odontologistId}`);
+    }
     updateOdontologist(odontologistId, data) {
         return this.put(`${odontologistId}`, data);
     }

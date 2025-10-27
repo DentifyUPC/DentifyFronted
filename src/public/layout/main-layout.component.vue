@@ -93,7 +93,7 @@ const menuConfig = {
   1: [ //Administrador
     { label: "Dashboard", route: "/home/dashboard", icon: "pi-home" },
     { label: "Horarios", route: "/home/schedules", icon: "pi-clock" },
-    { label: "Odontólogos", route: "/home/odontologists", icon: "pi-user" },
+    { label: "Odontólogos", route: "/home/clinic-odontologist", icon: "pi-user" },
     { label: "Servicios", route: "/home/admin-services", icon: "pi-briefcase" },
     { label: "Inventario", route: "/home/admin-inventory", icon: "pi-box" },
     { label: "Pacientes", route: "/home/patients", icon: "pi-users" },

@@ -51,6 +51,26 @@ export class AuthRepositoryImpl extends AuthRepository {
         return UserMapper.toDomain(res);
     }
 
+    async registerOdontologist(data) {
+        let formattedDate = data.birthDate;
+
+        if (data.birthDate instanceof Date) {
+            formattedDate = format(data.birthDate, 'dd/MM/yyyy');
+        } else if (typeof data.birthDate === 'string' && data.birthDate.includes('-')) {
+            const [year, month, day] = data.birthDate.split('-');
+            formattedDate = `${day}/${month}/${year}`;
+        }
+
+        const body = {
+            ...data,
+            birthDate: formattedDate,
+            roleId: 2, // 🦷 Rol de odontólogo
+        };
+
+        const res = await authApi.registerOdontologist(body);
+        return UserMapper.toDomain(res);
+    }
+
 
     async getProfile() {
         try {

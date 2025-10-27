@@ -9,6 +9,7 @@ import ToolbarLayout from '@/public/layout/main-layout.component.vue'
 import AdminInventoryView from '@/modules/services/presentation/views/inventory-view.vue'
 import AdminServicesView from '@/modules/services/presentation/views/service-view.vue'
 import NotFound from "@/public/not-found.component.vue";
+import ClinicOdontologistsView from "@/modules/practiceManagement/presentation/views/clinic-odontologists-view.vue";
 import { useAuthStore } from '@/modules/iam/stores/authStore.js'
 
 
@@ -29,6 +30,7 @@ const routes = [
             { path: 'patient-profile', name: 'patient-profile', component: PatientProfileView },
             { path: 'admin-inventory', name: 'admin-inventory', component: AdminInventoryView },
             { path: 'admin-services', name: 'admin-services', component: AdminServicesView },
+            {path: 'clinic-odontologist', name : 'clinic-odontologist', component: ClinicOdontologistsView  },
 
 
             { path: 'update-password', name: 'update-password', component: UpdatePasswordView },

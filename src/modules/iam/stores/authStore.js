@@ -52,6 +52,16 @@ export const useAuthStore = defineStore('auth', {
                 return false;
             }
         },
+        async registerOdontologist(payload) {
+            try {
+                await authRepositoryImpl.registerOdontologist(payload);
+                return true;
+            } catch (error) {
+                console.error("❌ Error en registro de odontólogo:", error);
+                return false;
+            }
+        },
+
 
         setUser(userData) {
             this.user = userData;

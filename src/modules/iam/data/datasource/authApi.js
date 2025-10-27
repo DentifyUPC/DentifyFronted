@@ -13,6 +13,10 @@ class AuthApi extends BaseService {
         return await this.post('/register', payload, false);
     }
 
+    async registerOdontologist(payload) {
+        return await this.post('/register', payload, false);
+    }
+
 }
 
 export const authApi = new AuthApi();
