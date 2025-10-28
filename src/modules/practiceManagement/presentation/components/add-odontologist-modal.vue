@@ -94,7 +94,7 @@ const registerOdontologist = async () => {
     birthDate: birthDate.value,
     email: email.value,
     identificationTypeId: identificationTypeId.value,
-    clinicId: admin.clinicId, // 💡 asignar la clínica del admin
+    clinicId: admin.clinicId,
     roleId: 3, // Rol de ODONTOLOGIST
   };
 
@@ -108,20 +108,20 @@ const registerOdontologist = async () => {
 </script>
 
 <style scoped>
-/* Fondo negro translúcido y centrado */
+
 .fixed {
   position: fixed;
   inset: 0;
-  z-index: 9999; /* Encima de todo */
+  z-index: 9999;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(17, 24, 39, 0.7); /* bg-black bg-opacity-70 */
+  background-color: rgba(17, 24, 39, 0.7);
   backdrop-filter: blur(4px);
   animation: fadeOverlay 0.25s ease-out;
 }
 
-/* Caja principal del modal */
+
 .modal-content {
   background: white;
   border-radius: 1rem;
@@ -134,7 +134,7 @@ const registerOdontologist = async () => {
   overflow-y: auto;
 }
 
-/* Botón cerrar */
+
 .close-btn {
   position: absolute;
   top: 1rem;
@@ -146,7 +146,7 @@ const registerOdontologist = async () => {
   color: #111827;
 }
 
-/* Animaciones */
+
 @keyframes fadeOverlay {
   from {
     opacity: 0;

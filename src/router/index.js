@@ -11,6 +11,7 @@ import AdminServicesView from '@/modules/services/presentation/views/service-vie
 import NotFound from "@/public/not-found.component.vue";
 import ClinicOdontologistsView from "@/modules/practiceManagement/presentation/views/clinic-odontologists-view.vue";
 import { useAuthStore } from '@/modules/iam/stores/authStore.js'
+import ClinicPatientView from "@/modules/patientAttention/presentation/views/clinic-patient-view.vue";
 
 
 const routes = [
@@ -31,6 +32,7 @@ const routes = [
             { path: 'admin-inventory', name: 'admin-inventory', component: AdminInventoryView },
             { path: 'admin-services', name: 'admin-services', component: AdminServicesView },
             {path: 'clinic-odontologist', name : 'clinic-odontologist', component: ClinicOdontologistsView  },
+            {path: 'clinic-patients', name: 'clinic-patients', component: ClinicPatientView },
 
 
             { path: 'update-password', name: 'update-password', component: UpdatePasswordView },
