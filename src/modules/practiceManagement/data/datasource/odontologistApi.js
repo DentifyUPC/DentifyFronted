@@ -2,7 +2,7 @@ import BaseService from "@/shared/serivces/baseService.js";
 
 class OdontologistApi extends BaseService {
     constructor() {
-        super("/odontologists");
+        super("/practice-management-service/api/v1/odontologists");
     }
 
     getByUserId(userId) {

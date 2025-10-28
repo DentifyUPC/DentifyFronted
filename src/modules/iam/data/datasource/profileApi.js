@@ -3,7 +3,7 @@ import BaseService from '@/shared/serivces/BaseService.js';
 class ProfileApi extends BaseService {
     constructor() {
 
-        super('/profile');
+        super('/iam-service/api/v1/profile');
     }
 
     async getProfile() {
