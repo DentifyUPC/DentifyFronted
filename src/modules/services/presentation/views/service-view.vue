@@ -1,133 +1,123 @@
 <template>
-  <div class="p-8 bg-[#AACFF3] min-h-screen flex justify-center items-start">
-    <div class="w-full max-w-5xl bg-white rounded-2xl shadow-lg p-6 mt-10">
-      <h1 class="text-3xl font-semibold text-center text-gray-800 mb-6">
-        Servicios Disponibles
-      </h1>
+  <div class="min-h-screen bg-gray-50 flex flex-col items-center py-12 px-6">
+    <h1 class="text-3xl font-semibold text-[#2B6D8C] mb-8">
+      Servicios Disponibles
+    </h1>
 
-      <!-- Lista de servicios base -->
-      <ServiceList @selectService="selectService" />
+    <!-- Loader -->
+    <div v-if="isLoading" class="flex items-center justify-center py-16">
+      <i class="pi pi-spin pi-spinner text-3xl text-[#2B6D8C]"></i>
+      <span class="ml-3 text-gray-600">Cargando servicios...</span>
+    </div>
 
-      <!-- Ítems requeridos y acción -->
-      <div v-if="selectedService" class="mt-8 border-t pt-6">
-        <h2 class="text-xl font-bold text-gray-700 mb-2">
-          {{ selectedService.name }}
-        </h2>
+    <!-- Error -->
+    <div v-else-if="error" class="text-red-500 text-lg text-center py-10">
+      ❌ Error al cargar los servicios: {{ error }}
+    </div>
 
-        <ItemsPerService :serviceId="selectedService.id" />
-
-        <div class="flex justify-end mt-4">
-          <button
-              @click="addServiceToClinic"
-              :disabled="isSaving"
-              class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:bg-gray-400"
+    <!-- Lista -->
+    <div
+        v-else
+        class="w-full max-w-3xl bg-white rounded-2xl shadow-md divide-y divide-gray-200 overflow-hidden"
+    >
+      <div
+          v-for="service in services"
+          :key="service.id"
+          class="flex items-center justify-between px-6 py-4 hover:bg-gray-100 transition"
+      >
+        <div class="flex items-center gap-3 flex-nowrap min-w-0">
+          <!-- Ícono -->
+          <div
+              class="flex items-center justify-center bg-[#2B6D8C]/10 rounded-full flex-shrink-0"
+              style="width: 42px; height: 42px;"
           >
-            {{ isSaving ? 'Agregando...' : 'Agregar servicio a clínica' }}
-          </button>
-        </div>
-      </div>
+            <i class="pi pi-briefcase text-[#2B6D8C] text-lg"></i>
+          </div>
 
-      <!-- Servicios ya registrados -->
-      <div v-if="clinicServices.length" class="mt-10 border-t pt-6">
-        <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">
-          Servicios registrados en esta clínica
-        </h2>
-        <ClinicServicesList :services="clinicServicesWithNames" />
+          <!-- Texto -->
+          <p
+              class="text-gray-800 font-medium text-lg leading-none truncate"
+              style="white-space: nowrap;"
+              :title="service.displayName()"
+          >
+            {{ service.displayName().trim() }}
+          </p>
+        </div>
+
+        <!-- Botón -->
+        <button
+            @click="openItemsModal(service)"
+            class="text-[#2B6D8C] hover:text-[#1E4F67] text-sm font-semibold transition flex-shrink-0"
+        >
+          Ver Detalles
+        </button>
       </div>
     </div>
+
+    <!-- Sin servicios -->
+    <div
+        v-if="!isLoading && !services.length && !error"
+        class="text-gray-500 text-center mt-10"
+    >
+      No hay servicios registrados.
+    </div>
+
+    <!-- Modal: ItemsPerServiceListComponent -->
+    <ItemsPerServiceListComponent
+        v-if="showModal"
+        :service="selectedService"
+        @close="showModal = false"
+    />
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
-import ServiceList from '../components/service-list-component.vue';
-import ItemsPerService from '../components/item-per-service-list-component.vue';
-import ClinicServicesList from '../components/service-list-component.vue';
-import { useServicePerClinicStore } from '@/modules/clinicManagement/stores/servicePerClinicStore.js';
-import { useItemPerClinicStore } from '@/modules/clinicManagement/stores/itemPerClinicStore.js';
-import { useItemPerServiceStore } from '@/modules/services/stores/itemPerServiceStore.js';
-import { serviceStore } from '@/modules/services/stores/serviceStore.js';
+import { ref, onMounted } from "vue";
+import { servicesRepositoryImpl } from "@/modules/services/data/repositories/serviceRepositoryImpl.js";
+import ItemsPerServiceListComponent from "@/modules/services/presentation/components/item-per-service-list-component.vue";
 
-const servicePerClinicStore = useServicePerClinicStore();
-const itemPerClinicStore = useItemPerClinicStore();
-const itemPerServiceStore = useItemPerServiceStore();
-const servicesCatalog = serviceStore();
-
+const services = ref([]);
+const isLoading = ref(true);
+const error = ref(null);
+const showModal = ref(false);
 const selectedService = ref(null);
-const isSaving = ref(false);
-const clinicId = 1; // TODO: Reemplazar con userStore.user.clinicId
-
-const selectService = (service) => {
-  selectedService.value = service;
-};
-
-// 🔹 Cargar servicios existentes en la clínica
-const clinicServices = ref([]);
-
-const loadClinicServices = async () => {
-  try {
-    const res = await servicePerClinicStore.fetchAllByClinic(clinicId);
-    clinicServices.value = res || [];
-    console.log('✅ Servicios cargados:', res);
-  } catch (e) {
-    console.error('❌ Error cargando servicios de la clínica:', e);
-  }
-};
-
-
-// 🔹 Mostrar nombre del servicio en la lista
-const clinicServicesWithNames = computed(() =>
-    clinicServices.value.map((svc) => {
-      const base = servicesCatalog.services.find(s => s.id === svc.serviceId);
-      return {
-        ...svc,
-        serviceName: base?.name || `Servicio #${svc.serviceId}`,
-      };
-    })
-);
-
-// 🔹 Agregar servicio validando stock
-const addServiceToClinic = async () => {
-  if (!selectedService.value) return;
-
-  isSaving.value = true;
-
-  await itemPerClinicStore.fetchAllByClinic(clinicId);
-  const inventory = itemPerClinicStore.items;
-  const requiredItems = itemPerServiceStore.items;
-
-  const missing = requiredItems.filter(req => {
-    const found = inventory.find(i => i.itemName === req.name);
-    return !found || found.quantity < req.quantityRequired;
-  });
-
-  if (missing.length > 0) {
-    alert(
-        '❌ No hay stock suficiente para agregar el servicio.\nFaltan:\n' +
-        missing.map(m => `- ${m.name} (${m.quantityRequired})`).join('\n')
-    );
-    isSaving.value = false;
-    return;
-  }
-
-  try {
-    await servicePerClinicStore.createServicePerClinic({
-      clinicId,
-      serviceId: selectedService.value.id,
-      totalLaborPrice: 200,
-    });
-    alert('✅ Servicio agregado correctamente.');
-    await loadClinicServices();
-  } catch (err) {
-    alert('❌ No se pudo agregar: ' + (err.response?.data?.message || err.message));
-  } finally {
-    isSaving.value = false;
-  }
-};
 
 onMounted(async () => {
-  await servicesCatalog.fetchAll();
-  await loadClinicServices();
+  try {
+    const data = await servicesRepositoryImpl.getAll();
+    services.value = data;
+  } catch (err) {
+    console.error("❌ Error cargando servicios:", err);
+    error.value = err.response?.data?.message || err.message;
+  } finally {
+    isLoading.value = false;
+  }
 });
 
+const openItemsModal = (service) => {
+  selectedService.value = service;
+  showModal.value = true;
+};
 </script>
+
+<style scoped>
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+div[v-for] {
+  animation: fadeIn 0.3s ease-out;
+}
+
+i {
+  line-height: 1;
+  display: block;
+}
+</style>

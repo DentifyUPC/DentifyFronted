@@ -48,6 +48,7 @@
         <p><strong>Departamento:</strong> {{ odontologist.department || '—' }}</p>
         <p><strong>Provincia:</strong> {{ odontologist.province || '—' }}</p>
         <p><strong>Distrito:</strong> {{ odontologist.district || '—' }}</p>
+        <p><strong>Service ID:</strong> {{ odontologist.serviceId || '—' }}</p>
         <p class="md:col-span-2"><strong>Dirección:</strong> {{ odontologist.street || '—' }}</p>
       </div>
 
