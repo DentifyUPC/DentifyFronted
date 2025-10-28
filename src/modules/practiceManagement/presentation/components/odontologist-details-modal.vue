@@ -3,7 +3,7 @@
     <div
         class="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl mx-4 p-8 animate-fadeIn overflow-y-auto max-h-[90vh]"
     >
-      <!-- Botón cerrar -->
+
       <button
           @click="$emit('close')"
           class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition"
@@ -12,12 +12,12 @@
         <i class="pi pi-times text-xl"></i>
       </button>
 
-      <!-- Título -->
+
       <h2 class="text-2xl font-semibold text-teal-700 mb-6 text-center">
         Detalles del Odontólogo
       </h2>
 
-      <!-- Información principal -->
+
       <div class="flex items-center gap-5 mb-6">
         <div class="flex-shrink-0">
           <i class="pi pi-user text-6xl text-teal-600"></i>
@@ -38,7 +38,6 @@
         </div>
       </div>
 
-      <!-- Datos detallados -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5 text-gray-700">
         <p><strong>Teléfono:</strong> {{ odontologist.phoneNumber || '—' }}</p>
         <p><strong>Género:</strong> {{ odontologist.gender || '—' }}</p>
@@ -52,7 +51,6 @@
         <p class="md:col-span-2"><strong>Dirección:</strong> {{ odontologist.street || '—' }}</p>
       </div>
 
-      <!-- Botones -->
       <div class="flex justify-end gap-3 mt-8">
         <button
             @click="$emit('close')"
@@ -68,7 +66,7 @@
         </button>
       </div>
 
-      <!-- Modal de actualización -->
+
       <update-odontologist-profile-component
           v-if="showUpdateModal"
           :odontologist="odontologist"
@@ -98,7 +96,7 @@ const openUpdateModal = () => {
 };
 
 const handleUpdated = (updatedData) => {
-  // Refresca el objeto odontologist con los nuevos datos
+
   Object.assign(props.odontologist, updatedData);
 
   emit("updated", updatedData);
@@ -108,20 +106,20 @@ const handleUpdated = (updatedData) => {
 </script>
 
 <style scoped>
-/* Fondo negro translúcido y centrado */
+
 .fixed {
   position: fixed;
   inset: 0;
-  z-index: 9999; /* Encima de todo */
+  z-index: 9999;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(17, 24, 39, 0.7); /* bg-black bg-opacity-70 */
+  background-color: rgba(17, 24, 39, 0.7);
   backdrop-filter: blur(4px);
   animation: fadeOverlay 0.25s ease-out;
 }
 
-/* Caja principal del modal */
+
 .modal-content {
   background: white;
   border-radius: 1rem;
@@ -134,7 +132,7 @@ const handleUpdated = (updatedData) => {
   overflow-y: auto;
 }
 
-/* Botón cerrar */
+
 .close-btn {
   position: absolute;
   top: 1rem;
@@ -146,7 +144,7 @@ const handleUpdated = (updatedData) => {
   color: #111827;
 }
 
-/* Animaciones */
+
 @keyframes fadeOverlay {
   from {
     opacity: 0;

@@ -5,7 +5,7 @@
     </div>
 
     <div v-else>
-      <!-- PERFIL DISPONIBLE -->
+
       <div
           v-if="odontologist"
           class="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg border border-gray-100 p-8"
@@ -45,7 +45,7 @@
         </div>
       </div>
 
-      <!-- SIN PERFIL REGISTRADO -->
+
       <div
           v-else
           class="max-w-2xl mx-auto bg-white p-10 rounded-2xl shadow text-center border border-gray-100"
@@ -79,28 +79,28 @@ const clinicName = ref("");
 const isLoading = ref(true);
 
 onMounted(async () => {
-  console.log("🚀 Cargando perfil del odontólogo...");
+  console.log("Cargando perfil del odontólogo...");
   const user = JSON.parse(localStorage.getItem("user") || "null");
 
   if (!user) {
-    console.warn("⚠️ No hay usuario logueado en localStorage");
+    console.warn("⚠ No hay usuario logueado en localStorage");
     isLoading.value = false;
     return;
   }
 
   try {
     odontologist.value = await odontologistRepositoryImpl.getProfile(user.id);
-    console.log("✅ Odontólogo cargado:", odontologist.value);
+    console.log(" Odontólogo cargado:", odontologist.value);
 
     userProfile.value = await authRepositoryImpl.getProfile(user.id);
-    console.log("✅ Perfil IAM cargado:", userProfile.value);
+    console.log(" Perfil IAM cargado:", userProfile.value);
 
     const clinics = await clinicRepositoryImpl.getClinicsForRegister();
     const clinic = clinics.find(c => c.id === odontologist.value.clinicId);
     clinicName.value = clinic ? clinic.name : "Desconocida";
   } catch (err) {
     const status = err.response?.status;
-    console.error("❌ Error al cargar datos:", err);
+    console.error(" Error al cargar datos:", err);
     if (status === 403 || status === 404) odontologist.value = null;
   } finally {
     isLoading.value = false;
@@ -108,8 +108,8 @@ onMounted(async () => {
 });
 
 const onChangePassword = () => {
-  console.log("🧩 Botón 'Actualizar contraseña' presionado — sin acción aún.");
-  // Aquí más adelante redirigiremos o abriremos el modal de cambio de contraseña
+  console.log(" Botón 'Actualizar contraseña' presionado — sin acción aún.");
+
 };
 </script>
 

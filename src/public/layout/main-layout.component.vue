@@ -5,7 +5,7 @@
         style="background-color: #AACFF3; border: 2px solid #AACFF3;"
     >
 
-      <!-- Logo -->
+
       <template #start>
         <pv-button
             class="rounded-lg text-lg px-6 py-3 flex items-center transition-transform duration-300 hover:scale-105 hover:shadow-lg"
@@ -32,7 +32,7 @@
         </div>
       </template>
 
-      <!-- End actions -->
+
       <template #end>
         <div class="flex items-center">
 
@@ -88,7 +88,7 @@ const goToProfile = () => {
 
 const user = JSON.parse(localStorage.getItem("user") || "{}");
 
-// 🧩 Menús base
+
 const menuConfig = {
   1: [ //Administrador
     { label: "Dashboard", route: "/home/dashboard", icon: "pi-home" },
@@ -96,7 +96,7 @@ const menuConfig = {
     { label: "Odontólogos", route: "/home/clinic-odontologist", icon: "pi-user" },
     { label: "Servicios", route: "/home/admin-services", icon: "pi-briefcase" },
     { label: "Inventario", route: "/home/admin-inventory", icon: "pi-box" },
-    { label: "Pacientes", route: "/home/patients", icon: "pi-users" },
+    { label: "Pacientes", route: "/home/clinic-patients", icon: "pi-users" },
     { label: "Pagos", route: "/home/payments", icon: "pi-dollar" },
     { label: "Perfil", route: "/home/profile", icon: "pi-user" },
   ],
