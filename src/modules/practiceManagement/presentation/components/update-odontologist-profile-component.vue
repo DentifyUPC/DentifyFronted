@@ -110,6 +110,18 @@
           />
         </div>
 
+        <!-- Nuevo campo: Service ID -->
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">Service ID</label>
+          <input
+              v-model.number="form.serviceId"
+              type="number"
+              min="1"
+              placeholder="Ej. 1"
+              class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-400"
+          />
+        </div>
+
         <!-- Campo activo/inactivo -->
         <div>
           <label class="block text-sm text-gray-600 mb-1">Estado</label>
@@ -198,7 +210,7 @@ const handleUpdate = async () => {
         form.value
     );
 
-    emit("updated", updatedData); // ← envía los datos actualizados al padre
+    emit("updated", updatedData);
     alert("Información actualizada correctamente ✅");
     emit("close");
   } catch (error) {
