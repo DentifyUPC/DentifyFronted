@@ -24,25 +24,47 @@
       >
 
         <div>
-          <label class="block text-sm text-gray-600 mb-1">Género</label>
+          <label class="block text-sm text-gray-600 mb-1">Departamento</label>
           <select
-              v-model="form.gender"
-              class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-400"
+              v-model="selectedDepartment"
+              class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-400 bg-white"
+              required
           >
-            <option value="MALE">Hombre</option>
-            <option value="FEMALE">Mujer</option>
-
+            <option :value="null" disabled>-- Selecciona --</option>
+            <option v-for="dep in departments" :key="dep" :value="dep">
+              {{ dep }}
+            </option>
           </select>
         </div>
 
         <div>
-          <label class="block text-sm text-gray-600 mb-1">Teléfono</label>
-          <input
-              v-model="form.phoneNumber"
-              type="text"
-              placeholder="Número de teléfono"
-              class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-400"
-          />
+          <label class="block text-sm text-gray-600 mb-1">Provincia</label>
+          <select
+              v-model="selectedProvince"
+              :disabled="!selectedDepartment || provinces.length === 0"
+              class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-400 disabled:bg-gray-100 bg-white"
+              required
+          >
+            <option :value="null" disabled>-- Selecciona --</option>
+            <option v-for="prov in provinces" :key="prov" :value="prov">
+              {{ prov }}
+            </option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">Distrito</label>
+          <select
+              v-model="selectedDistrict"
+              :disabled="!selectedProvince || districts.length === 0"
+              class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-400 disabled:bg-gray-100 bg-white"
+              required
+          >
+            <option :value="null" disabled>-- Selecciona --</option>
+            <option v-for="dist in districts" :key="dist" :value="dist">
+              {{ dist }}
+            </option>
+          </select>
         </div>
 
         <div>
@@ -56,36 +78,28 @@
         </div>
 
         <div>
-          <label class="block text-sm text-gray-600 mb-1">Distrito</label>
-          <input
-              v-model="form.district"
-              type="text"
-              placeholder="Distrito"
-              class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-400"
-          />
+          <label class="block text-sm text-gray-600 mb-1">Género</label>
+          <select
+              v-model="form.gender"
+              class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-400 bg-white"
+          >
+            <option value="MALE">Masculino</option>
+            <option value="FEMALE">Femenino</option>
+          </select>
         </div>
 
         <div>
-          <label class="block text-sm text-gray-600 mb-1">Provincia</label>
+          <label class="block text-sm text-gray-600 mb-1">Teléfono</label>
           <input
-              v-model="form.province"
+              v-model="form.phoneNumber"
               type="text"
-              placeholder="Provincia"
+              placeholder="Número de teléfono (9 dígitos)"
               class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-400"
+              maxlength="9"
           />
+           <p v-if="phoneNumberError" class="text-red-500 text-xs mt-1">{{ phoneNumberError }}</p>
         </div>
 
-        <div>
-          <label class="block text-sm text-gray-600 mb-1">Departamento</label>
-          <input
-              v-model="form.department"
-              type="text"
-              placeholder="Departamento"
-              class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-400"
-          />
-        </div>
-
-        <!-- Botones -->
         <div class="md:col-span-2 flex justify-end gap-3 mt-6">
           <PvButton
               type="button"
@@ -105,15 +119,16 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watch, nextTick } from "vue"; 
 import { patientRepositoryImpl } from "@/modules/patientAttention/data/repositories/patientRepositoryImpl.js";
-
+import ubigeoData from '@/data/ubigeo-peru.json'; 
 
 const props = defineProps({
   patient: { type: Object, default: null },
   userProfile: { type: Object, required: true },
 });
 const emit = defineEmits(["close", "updated"]);
+
 
 const form = ref({
   gender: "",
@@ -124,55 +139,128 @@ const form = ref({
   phoneNumber: "",
 });
 
-const phoneNumberError = ref('');
 
+const phoneNumberError = ref('');
 const isPhoneNumberValid = computed(() => {
-  const phone = form.value.phoneNumber.trim();
-  // 9 digitos y solo numeros 
+  const phone = form.value.phoneNumber ? form.value.phoneNumber.trim() : '';
   return /^\d{9}$/.test(phone);
 });
 
-onMounted(() => {
+// --- UBIGEO Reactive Variables ---
+const ubigeo = ref([]);
+const departments = ref([]);
+const provinces = ref([]);
+const districts = ref([]);
+
+const selectedDepartment = ref(null);
+const selectedProvince = ref(null);
+const selectedDistrict = ref(null);
+// --- End UBIGEO ---
+
+onMounted(async () => { // Hacemos onMounted async para usar await con nextTick
+  // Load Ubigeo data
+  ubigeo.value = ubigeoData;
+  departments.value = ubigeoData.map(dep => dep.departamento).sort();
+
+  // Pre-fill form if patient data exists
   if (props.patient) {
     form.value.gender = props.patient.gender || "";
     form.value.street = props.patient.street || "";
-    form.value.district = props.patient.district || "";
-    form.value.department = props.patient.department || "";
-    form.value.province = props.patient.province || "";
     form.value.phoneNumber = props.patient.phoneNumber || "";
+
+
+    if (props.patient.department) {
+      selectedDepartment.value = props.patient.department;
+      await nextTick();
+      if (props.patient.province && provinces.value.includes(props.patient.province)) {
+          selectedProvince.value = props.patient.province;
+          await nextTick();
+          if (props.patient.district && districts.value.includes(props.patient.district)) {
+              selectedDistrict.value = props.patient.district;
+          } else {
+              selectedDistrict.value = null; // Resetea si el distrito guardado no está en la lista cargada
+          }
+      } else {
+          selectedProvince.value = null; // Resetea si la provincia guardada no está en la lista cargada
+          selectedDistrict.value = null;
+      }
+    }
+    // --- FIN PRE-SELECCIÓN ---
   }
 });
 
-const handleUpdate = async () => {
-  phoneNumberError.value = '';
-  if (!isPhoneNumberValid.value) {
-    phoneNumberError.value = "El número de teléfono debe contener exactamente 9 dígitos.";
-    alert(phoneNumberError.value); 
-    return; 
+// --- Watchers (iguales, pero más robustos con la carga inicial mejorada) ---
+watch(selectedDepartment, (newDepartment) => {
+  selectedProvince.value = null;
+  selectedDistrict.value = null;
+  provinces.value = [];
+  districts.value = [];
+  form.value.department = newDepartment;
+
+  if (newDepartment) {
+    const depData = ubigeo.value.find(d => d.departamento === newDepartment);
+    if (depData) {
+      provinces.value = depData.provincias.map(p => p.provincia).sort();
+    }
   }
+});
 
-  try {
-    const patientId = props.patient?.id;
+watch(selectedProvince, (newProvince) => {
+  selectedDistrict.value = null;
+  districts.value = [];
+  form.value.province = newProvince;
 
-    if (!patientId) {
-      alert("No se encontró el ID del paciente. Recarga la página e inténtalo nuevamente.");
-      return;
+  if (newProvince && selectedDepartment.value) {
+    const depData = ubigeo.value.find(d => d.departamento === selectedDepartment.value);
+    const provData = depData?.provincias.find(p => p.provincia === newProvince);
+    if (provData) {
+      districts.value = [...provData.distritos].sort();
+    }
+  }
+});
+
+watch(selectedDistrict, (newDistrict) => {
+    form.value.district = newDistrict;
+});
+// --- End Watchers ---
+
+
+const handleUpdate = async () => {
+    phoneNumberError.value = '';
+    const phoneTrimmed = form.value.phoneNumber ? form.value.phoneNumber.trim() : '';
+    const isValidPhone = /^\d{9}$/.test(phoneTrimmed);
+    if (!isValidPhone) {
+        phoneNumberError.value = "El número de teléfono debe contener exactamente 9 dígitos.";
+        alert(phoneNumberError.value);
+        return;
     }
 
-    const payload = { ...form.value };
+    if (!selectedDepartment.value || !selectedProvince.value || !selectedDistrict.value) {
+        alert("Por favor, selecciona Departamento, Provincia y Distrito.");
+        return;
+    }
 
-    await patientRepositoryImpl.updateProfile(patientId, payload);
+    // Asegúrate de que los valores del formulario reflejen la selección final
+    form.value.department = selectedDepartment.value;
+    form.value.province = selectedProvince.value;
+    form.value.district = selectedDistrict.value;
 
-    emit("updated");
-    alert("Información actualizada correctamente ✅");
-    emit("close");
-  } catch (error) {
-    console.error("❌ Error al actualizar:", error);
-    alert("Ocurrió un error al guardar los datos del paciente.");
-  }
+    try {
+        const patientId = props.patient?.id;
+        if (!patientId) {
+            alert("No se encontró el ID del paciente.");
+            return;
+        }
+        const payload = { ...form.value };
+        await patientRepositoryImpl.updateProfile(patientId, payload);
+        emit("updated");
+        alert("Información actualizada ✅");
+        emit("close");
+    } catch (error) {
+        console.error("❌ Error al actualizar:", error);
+        alert("Ocurrió un error al guardar.");
+    }
 };
-
-
 
 </script>
 
