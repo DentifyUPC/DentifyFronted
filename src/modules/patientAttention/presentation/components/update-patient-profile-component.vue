@@ -92,14 +92,12 @@
               label="Cancelar"
               icon="pi pi-times"
               @click="$emit('close')"
-              class="bg-gray-400 border-none hover:bg-gray-500 text-white"
-          />
+              class="bg-gray-400 border-none hover:bg-gray-500 text-white px-5 py-2" />
           <PvButton
               type="submit"
               label="Guardar cambios"
               icon="pi pi-check"
-              class="bg-teal-600 border-none hover:bg-teal-700 text-white"
-          />
+              class="bg-teal-600 border-none hover:bg-teal-700 text-white px-5 py-2" />
         </div>
       </form>
     </div>
