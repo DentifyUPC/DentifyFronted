@@ -1,50 +1,3 @@
-<script setup>
-import { ref, onMounted, computed } from 'vue'
-import { useItemPerClinicStore } from '@/modules/clinicManagement/stores/itemPerClinicStore.js'
-import { useItemsStore } from '@/modules/services/stores/itemStore.js'
-import { useAuthStore } from '@/modules/iam/stores/authStore.js'
-import AddItemModal from '@/modules/clinicManagement/presentation/components/add-item-component.vue'
-
-const store = useItemPerClinicStore()
-const itemsStore = useItemsStore()
-const authStore = useAuthStore()
-const showAddModal = ref(false)
-
-const clinicId = computed(() => authStore.user?.clinicId ?? null)
-
-onMounted(async () => {
-  if (!clinicId.value) {
-    console.warn('⚠️ No se encontró clinicId en el usuario logueado')
-    return
-  }
-
-  await Promise.all([
-    store.fetchAllByClinic(clinicId.value),
-    itemsStore.fetchAll(),
-  ])
-
-  console.log('🧩 Items con IDs:', itemsStore.items.map(i => i.id));
-  console.log('🧩 ItemsPerClinic itemIds:', store.items.map(i => i.itemId));
-
-})
-
-const inventoryWithNames = computed(() =>
-    store.items.map(item => {
-      const relatedItem = itemsStore.items.find(it => Number(it.id) === Number(item.itemId));
-
-      return {
-        ...item,
-        itemName: relatedItem?.name || `Item #${item.itemId}`,
-        unitTypeName: relatedItem?.unitType || '—',
-        priceFormatted: `S/. ${Number(item.price ?? 0).toFixed(2)}`,
-        stockInfo: `${item.availableStock ?? 0}/${item.minimumStock ?? 0}`,
-      };
-    })
-);
-
-
-</script>
-
 <template>
   <div class="min-h-screen bg-[#E6F0FA] flex flex-col items-center py-10 px-6">
     <div class="w-full max-w-5xl bg-white rounded-2xl shadow-lg p-8">
@@ -69,10 +22,11 @@ const inventoryWithNames = computed(() =>
       <table v-else class="w-full text-left border-collapse">
         <thead class="bg-[#AACFF3] text-[#2B6D8C]">
         <tr>
-          <th class="py-3 px-4 rounded-tl-xl">Nombre del Ítem</th>
+          <th class="py-3 px-4">Nombre del Ítem</th>
           <th class="py-3 px-4">Stock</th>
           <th class="py-3 px-4">Precio</th>
-          <th class="py-3 px-4 rounded-tr-xl">Unidad</th>
+          <th class="py-3 px-4">Unidad</th>
+          <th class="py-3 px-4 text-center">Acciones</th>
         </tr>
         </thead>
         <tbody>
@@ -85,17 +39,84 @@ const inventoryWithNames = computed(() =>
           <td class="py-3 px-4 text-gray-600">{{ item.stockInfo }}</td>
           <td class="py-3 px-4 text-gray-700 font-semibold">{{ item.priceFormatted }}</td>
           <td class="py-3 px-4 text-gray-500">{{ item.unitTypeName }}</td>
+          <td class="py-3 px-4 text-center">
+            <button
+                @click="openUpdateModal(item)"
+                class="bg-[#2B6D8C] text-white px-3 py-1 rounded-lg hover:bg-[#1E4F67] transition"
+            >
+              Editar
+            </button>
+          </td>
         </tr>
         </tbody>
       </table>
     </div>
 
-    <!-- 🧩 Modal para agregar ítem -->
+    <!-- Modales -->
     <AddItemModal
         v-if="showAddModal"
         :visible="showAddModal"
         :clinic-id="clinicId"
         @close="showAddModal = false"
     />
+
+    <UpdateItemModal
+        v-if="showUpdateModal"
+        :visible="showUpdateModal"
+        :item="selectedItem"
+        @close="showUpdateModal = false"
+        @updated="refreshData"
+    />
   </div>
 </template>
+
+<script setup>
+import { ref, onMounted, computed } from "vue";
+import { useItemPerClinicStore } from "@/modules/clinicManagement/stores/itemPerClinicStore.js";
+import { useItemsStore } from "@/modules/services/stores/itemStore.js";
+import { useAuthStore } from "@/modules/iam/stores/authStore.js";
+import AddItemModal from "@/modules/clinicManagement/presentation/components/add-item-component.vue";
+import UpdateItemModal from "@/modules/clinicManagement/presentation/components/update-item-component.vue";
+
+const store = useItemPerClinicStore();
+const itemsStore = useItemsStore();
+const authStore = useAuthStore();
+
+const showAddModal = ref(false);
+const showUpdateModal = ref(false);
+const selectedItem = ref(null);
+
+const clinicId = computed(() => authStore.user?.clinicId ?? null);
+
+async function refreshData() {
+  await store.fetchAllByClinic(clinicId.value);
+}
+
+function openUpdateModal(item) {
+  selectedItem.value = item;
+  showUpdateModal.value = true;
+}
+
+onMounted(async () => {
+  if (!clinicId.value) {
+    console.warn("⚠️ No se encontró clinicId en el usuario logueado");
+    return;
+  }
+
+  await Promise.all([store.fetchAllByClinic(clinicId.value), itemsStore.fetchAll()]);
+});
+
+const inventoryWithNames = computed(() =>
+    store.items.map((item) => {
+      const relatedItem = itemsStore.items.find((it) => Number(it.id) === Number(item.itemId));
+
+      return {
+        ...item,
+        itemName: relatedItem?.name || `Item #${item.itemId}`,
+        unitTypeName: relatedItem?.unitType || "—",
+        priceFormatted: `S/. ${Number(item.price ?? 0).toFixed(2)}`,
+        stockInfo: `${item.availableStock ?? 0}/${item.minimumStock ?? 0}`,
+      };
+    })
+);
+</script>

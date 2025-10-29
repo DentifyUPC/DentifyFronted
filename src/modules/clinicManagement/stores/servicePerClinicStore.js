@@ -31,24 +31,6 @@ export const useServicePerClinicStore = defineStore('servicePerClinic', {
                 this.isLoading = false;
             }
         },
-        async fetchAllByClinic(clinicId) {
-            try {
-                this.isLoading = true;
-                this.error = null;
-                const { data } = await servicePerClinicRepositoryImpl.getAllByClinicId(clinicId);
-                return data;
-            } catch (err) {
-                this.error = err.response?.data || err.message || String(err);
-                console.error('❌ Error al cargar services-per-clinic:', err);
-                throw err;
-            } finally {
-                this.isLoading = false;
-            }
-        },
-        async getAllByClinicId(clinicId) {
-            const { data } = await servicePerClinicApi.get(`/${clinicId}`);
-            return data.map(ServicePerClinicMapper.toDomain);
-        }
 
 
     },

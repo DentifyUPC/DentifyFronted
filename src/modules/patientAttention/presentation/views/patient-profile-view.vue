@@ -27,6 +27,7 @@
             Actualizar información
           </button>
           <button
+              @click="openUpdatePassword"
               class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition"
           >
             Cambiar contraseña
@@ -62,6 +63,12 @@
             @close="showUpdateForm = false"
             @updated="handleProfileUpdated"
         />
+
+        <!-- ✅ Modal de cambiar contraseña -->
+        <update-password-modal
+            v-if="showUpdatePassword"
+            @close="showUpdatePassword = false"
+        />
       </Teleport>
     </div>
   </div>
@@ -72,11 +79,13 @@ import { ref, onMounted } from "vue";
 import { patientRepositoryImpl } from "../../data/repositories/patientRepositoryImpl.js";
 import { authRepositoryImpl } from "@/modules/iam/data/repositories/authRepositoryImpl.js";
 import updatePatientProfileComponent from "@/modules/patientAttention/presentation/components/update-patient-profile-component.vue";
+import UpdatePasswordModal from "@/modules/iam/presentation/components/update-password-modal.vue";
 
 const patient = ref(null);
 const userProfile = ref(null);
 const isLoading = ref(true);
 const showUpdateForm = ref(false);
+const showUpdatePassword = ref(false);
 
 onMounted(async () => {
   const user = JSON.parse(localStorage.getItem("user") || "null");
@@ -90,25 +99,14 @@ onMounted(async () => {
   } catch (err) {
     const status = err.response?.status;
     if (status === 403 || status === 404) {
-      // 404: el paciente no existe aún
       patient.value = null;
     } else {
       throw err;
     }
   }
 
-
   try {
     userProfile.value = await authRepositoryImpl.getProfile(user.id);
-    try {
-      patient.value = await patientRepositoryImpl.getProfile(user.id);
-    } catch (err) {
-      if (err.response && err.response.status === 403) {
-        patient.value = null;
-      } else {
-        throw err;
-      }
-    }
   } catch (error) {
     console.error("❌ Error al cargar perfil:", error);
   } finally {
@@ -127,16 +125,19 @@ const openUpdateForm = () => {
   showUpdateForm.value = true;
 };
 
-
+// ✅ Nueva función: abrir modal de cambio de contraseña
+const openUpdatePassword = () => {
+  showUpdatePassword.value = true;
+};
 </script>
 
 <style scoped>
-/* Fondo general */
+
 body {
   overflow-x: hidden;
 }
 
-/* Animación del modal */
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -148,7 +149,7 @@ body {
   }
 }
 
-/* Transición suave del overlay */
+
 .modal-overlay-enter-active,
 .modal-overlay-leave-active {
   transition: opacity 0.25s ease;
