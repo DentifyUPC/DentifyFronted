@@ -105,7 +105,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { patientRepositoryImpl } from "@/modules/patientAttention/data/repositories/patientRepositoryImpl.js";
 
 
@@ -124,6 +124,14 @@ const form = ref({
   phoneNumber: "",
 });
 
+const phoneNumberError = ref('');
+
+const isPhoneNumberValid = computed(() => {
+  const phone = form.value.phoneNumber.trim();
+  // 9 digitos y solo numeros 
+  return /^\d{9}$/.test(phone);
+});
+
 onMounted(() => {
   if (props.patient) {
     form.value.gender = props.patient.gender || "";
@@ -136,6 +144,13 @@ onMounted(() => {
 });
 
 const handleUpdate = async () => {
+  phoneNumberError.value = '';
+  if (!isPhoneNumberValid.value) {
+    phoneNumberError.value = "El número de teléfono debe contener exactamente 9 dígitos.";
+    alert(phoneNumberError.value); 
+    return; 
+  }
+
   try {
     const patientId = props.patient?.id;
 
