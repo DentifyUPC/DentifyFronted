@@ -29,8 +29,8 @@
               v-model="form.gender"
               class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-400"
           >
-            <option value="MALE">MALE</option>
-            <option value="FEMALE">FEMALE</option>
+            <option value="MALE">Hombre</option>
+            <option value="FEMALE">Mujer</option>
 
           </select>
         </div>
