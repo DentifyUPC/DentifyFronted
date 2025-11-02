@@ -2,7 +2,7 @@ import BaseService from '@/shared/serivces/BaseService.js';
 
 class ServicesApi extends BaseService {
     constructor() {
-        super('/services');
+        super('/service-catalog-service/api/v1/services');
     }
 
     async getAllServices() {

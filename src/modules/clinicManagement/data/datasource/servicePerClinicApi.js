@@ -1,12 +1,20 @@
-import BaseService from '@/shared/serivces/BaseService.js';
+import BaseService from '@/shared/serivces/baseService.js';
 
 class ServicePerClinicApi extends BaseService {
     constructor() {
-        super('/services-per-clinics');
+        super('/clinic-management-service/api/v1/services-per-clinics');
     }
 
     async create(payload) {
         return await this.post('', payload);
+    }
+
+    async update(id, payload) {
+        return await this.put(`/${id}`, payload);
+    }
+
+    async getAllByClinic(clinicId) {
+        return await this.get(`/${clinicId}`);
     }
 }
 
