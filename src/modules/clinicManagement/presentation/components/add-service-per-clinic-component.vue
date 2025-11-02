@@ -1,30 +1,15 @@
 <template>
-  <div
-      class="fixed inset-0 z-[60] flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm"
-  >
-    <div
-        class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-8 animate-fadeInUp"
-    >
-      <!-- Botón cerrar -->
-      <button
-          @click="$emit('close')"
-          class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition"
-      >
+  <div class="fixed inset-0 z-[60] flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm">
+    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-8 animate-fadeInUp">
+      <button @click="$emit('close')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition">
         <i class="pi pi-times text-xl"></i>
       </button>
 
-      <!-- Título -->
-      <h2 class="text-2xl font-semibold text-[#2B6D8C] mb-6 text-center">
-        Agregar Servicio a Clínica
-      </h2>
+      <h2 class="text-2xl font-semibold text-[#2B6D8C] mb-6 text-center">Agregar Servicio a Clínica</h2>
 
-      <!-- Formulario -->
       <form @submit.prevent="handleSubmit" class="space-y-6">
         <div>
-          <label
-              class="block text-gray-600 font-medium mb-2"
-              for="totalLaborPrice"
-          >
+          <label class="block text-gray-600 font-medium mb-2" for="totalLaborPrice">
             Monto total de mano de obra (S/.)
           </label>
           <input
@@ -33,26 +18,20 @@
               min="0"
               step="0.01"
               v-model="totalLaborPrice"
-              class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#2B6D8C]"
+              class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#aacff3]"
               placeholder="Ejemplo: 150.00"
               required
           />
         </div>
 
-        <!-- Mensajes -->
-        <p v-if="error" class="text-red-500 text-sm text-center">
-          ❌ {{ error }}
-        </p>
-        <p v-if="success" class="text-green-600 text-sm text-center">
-          ✅ Servicio agregado correctamente
-        </p>
+        <p v-if="error" class="text-red-500 text-sm text-center">❌ {{ error }}</p>
+        <p v-if="success" class="text-green-600 text-sm text-center">✅ Servicio agregado correctamente</p>
 
-        <!-- Botón -->
         <div class="flex justify-center">
           <button
               type="submit"
               :disabled="isLoading"
-              class="bg-[#2B6D8C] text-white px-6 py-2 rounded-lg hover:bg-[#1E4F67] transition disabled:opacity-50 disabled:cursor-not-allowed"
+              class="bg-[#aacff3] text-black px-6 py-2 rounded-lg hover:bg-[#8fc5f0] transition disabled:opacity-50"
           >
             <i v-if="isLoading" class="pi pi-spin pi-spinner mr-2"></i>
             {{ isLoading ? "Agregando..." : "Agregar Servicio" }}
@@ -68,7 +47,6 @@ import { ref } from "vue";
 import { servicePerClinicRepositoryImpl } from "../../data/repositories/servicePerClinicRepositoryImpl.js";
 
 const emit = defineEmits(["close", "added"]);
-
 const props = defineProps({
   clinicId: { type: Number, required: true },
   serviceId: { type: Number, required: true },
@@ -98,22 +76,18 @@ const handleSubmit = async () => {
 
     success.value = true;
     setTimeout(() => {
-      success.value = false;
       emit("added");
       emit("close");
     }, 1200);
   } catch (err) {
-    console.error("❌ Error al agregar servicio a clínica:", err);
+    console.error("❌ Error al agregar servicio:", err);
     error.value = err.response?.data?.message || "No se pudo agregar el servicio.";
   } finally {
     isLoading.value = false;
   }
 };
 </script>
-
-
 <style scoped>
-
 .fixed {
   position: fixed;
   inset: 0;

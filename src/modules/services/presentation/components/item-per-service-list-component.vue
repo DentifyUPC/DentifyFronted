@@ -1,86 +1,57 @@
 <template>
   <div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm">
     <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-4 p-8 overflow-y-auto max-h-[90vh] animate-fadeInUp">
-      <!-- Botón cerrar -->
-      <button
-          @click="$emit('close')"
-          class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition"
-      >
+      <button @click="$emit('close')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition">
         <i class="pi pi-times text-xl"></i>
       </button>
 
-      <!-- Título -->
       <h2 class="text-2xl font-semibold text-[#2B6D8C] mb-6 text-center">
-        {{ service.displayName() }}
+        {{ service.displayName?.() || service.name }}
       </h2>
 
-      <!-- Estado de carga -->
       <div v-if="isLoading" class="text-center py-10 text-gray-500">
         <i class="pi pi-spin pi-spinner text-2xl text-[#2B6D8C]"></i>
         <p>Cargando ítems requeridos...</p>
       </div>
 
-      <!-- Error -->
       <div v-else-if="error" class="text-center text-red-500 py-6">
         ❌ {{ error }}
       </div>
 
-      <!-- Lista de ítems -->
       <ul v-else class="divide-y divide-gray-200 border border-gray-100 rounded-lg overflow-hidden">
-        <li
-            v-for="item in items"
-            :key="item.id"
-            class="flex justify-between items-center px-4 py-3 hover:bg-gray-50 transition"
-        >
-          <span class="font-medium text-gray-700">{{ item.displayName() }}</span>
-          <span class="text-sm text-gray-500">
-            {{ item.quantityRequired }} {{ item.unitType }}
-          </span>
+        <li v-for="item in items" :key="item.id" class="flex justify-between items-center px-4 py-3 hover:bg-gray-50 transition">
+          <span class="font-medium text-gray-700">{{ item.displayName?.() || item.name }}</span>
+          <span class="text-sm text-gray-500">{{ item.quantityRequired }} {{ item.unitType }}</span>
         </li>
       </ul>
 
-      <!-- Botones -->
       <div class="mt-6 flex flex-col sm:flex-row justify-center gap-4">
-        <button
-            @click="openAddServiceModal"
-            class="bg-[#2B6D8C] text-white px-6 py-2 rounded-lg hover:bg-[#1E4F67] transition"
-        >
+        <button @click="openAddServiceModal" class="bg-[#aacff3] text-black px-6 py-2 rounded-lg hover:bg-[#8fc5f0] transition">
           Agregar Servicio a Clínica
         </button>
-
-        <button
-            @click="$emit('close')"
-            class="border border-gray-300 text-gray-600 px-6 py-2 rounded-lg hover:bg-gray-100 transition"
-        >
+        <button @click="$emit('close')" class="border border-gray-300 text-gray-600 px-6 py-2 rounded-lg hover:bg-gray-100 transition">
           Cerrar
         </button>
       </div>
     </div>
 
-    <!-- Modal agregar servicio -->
     <AddServicePerClinicComponent
         v-if="showAddServiceModal"
         :clinic-id="clinicId"
         :service-id="service.id"
         @close="showAddServiceModal = false"
+        @added="$emit('close')"
     />
-
-
-
-
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, watch, computed } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useAuthStore } from "@/modules/iam/stores/authStore.js";
 import { itemPerServiceRepositoryImpl } from "@/modules/services/data/repositories/itemPerServiceRepositoryImpl.js";
 import AddServicePerClinicComponent from "@/modules/clinicManagement/presentation/components/add-service-per-clinic-component.vue";
 
-const props = defineProps({
-  service: { type: Object, required: true },
-});
-
+const props = defineProps({ service: { type: Object, required: true } });
 const authStore = useAuthStore();
 const clinicId = computed(() => authStore.user?.clinicId ?? null);
 
@@ -94,7 +65,7 @@ const loadItems = async () => {
     isLoading.value = true;
     items.value = await itemPerServiceRepositoryImpl.getByServiceId(props.service.id);
   } catch (err) {
-    console.error("❌ Error al cargar ítems del servicio:", err);
+    console.error("❌ Error al cargar ítems:", err);
     error.value = err.response?.data?.message || err.message;
   } finally {
     isLoading.value = false;
@@ -110,11 +81,9 @@ const openAddServiceModal = () => {
 };
 
 onMounted(loadItems);
-watch(() => props.service, loadItems);
 </script>
 
 <style scoped>
-
 .fixed {
   position: fixed;
   inset: 0;
