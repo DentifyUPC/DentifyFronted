@@ -2,11 +2,13 @@ import BaseService from '@/shared/serivces/BaseService.js';
 
 class ClinicApi extends BaseService {
     constructor() {
-        super('/clinic-management-service/api/v1/clinics');
+        // No le pasamos prefijo al constructor
+        super(''); 
     }
 
     async getClinicsForRegister() {
-        return await this.get('/clinics-information-pre-register');
+        // Ponemos la URL completa que SÍ funciona en Swagger
+        return await this.get('/clinics/clinics-information-pre-register'); 
     }
 }
 
