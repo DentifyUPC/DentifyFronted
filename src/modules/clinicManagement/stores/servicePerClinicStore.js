@@ -1,13 +1,12 @@
 import { defineStore } from 'pinia';
 import { servicePerClinicRepositoryImpl } from '../data/repositories/servicePerClinicRepositoryImpl.js';
-import {ServicePerClinicMapper} from "@/modules/clinicManagement/data/mappers/servicePerClinicMapper.js";
-import {servicePerClinicApi} from "@/modules/clinicManagement/data/datasource/servicePerClinicApi.js";
 
 export const useServicePerClinicStore = defineStore('servicePerClinic', {
     state: () => ({
         isLoading: false,
         error: null,
         success: false,
+        services: [],
     }),
 
     actions: {
@@ -15,23 +14,52 @@ export const useServicePerClinicStore = defineStore('servicePerClinic', {
             try {
                 this.isLoading = true;
                 this.error = null;
-                this.success = false;
                 const res = await servicePerClinicRepositoryImpl.create({
                     clinicId,
                     serviceId,
                     totalLaborPrice,
                 });
+                this.services.push(res);
                 this.success = true;
                 return res;
             } catch (err) {
                 this.error = err.response?.data || err.message || String(err);
-                console.error('❌ Error al crear service-per-clinic:', err);
                 throw err;
             } finally {
                 this.isLoading = false;
             }
         },
 
+        async updateServicePerClinic(id, totalLaborPrice) {
+            try {
+                this.isLoading = true;
+                this.error = null;
+                const updated = await servicePerClinicRepositoryImpl.update(id, totalLaborPrice);
+                this.services = this.services.map(s =>
+                    s.id === id ? updated : s
+                );
+                return updated;
+            } catch (err) {
+                this.error = err.response?.data || err.message || String(err);
+                throw err;
+            } finally {
+                this.isLoading = false;
+            }
+        },
 
+        async fetchServicesByClinic(clinicId) {
+            try {
+                this.isLoading = true;
+                this.error = null;
+                const services = await servicePerClinicRepositoryImpl.getAllByClinic(clinicId);
+                this.services = services;
+                return services;
+            } catch (err) {
+                this.error = err.response?.data || err.message || String(err);
+                throw err;
+            } finally {
+                this.isLoading = false;
+            }
+        },
     },
 });

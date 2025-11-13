@@ -110,19 +110,24 @@
           />
         </div>
 
-        <!-- Nuevo campo: Service ID -->
+        <!-- Campo Service (nombre visible, id enviado) -->
         <div>
-          <label class="block text-sm text-gray-600 mb-1">Service ID</label>
-          <input
+          <label class="block text-sm text-black mb-1">Servicio</label>
+          <select
               v-model.number="form.serviceId"
-              type="number"
-              min="1"
-              placeholder="Ej. 1"
               class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-400"
-          />
+          >
+            <option disabled value="">Selecciona un servicio</option>
+            <option
+                v-for="service in services"
+                :key="service.id"
+                :value="service.id"
+            >
+              {{ service.name }}
+            </option>
+          </select>
         </div>
 
-        <!-- Campo activo/inactivo -->
         <div>
           <label class="block text-sm text-gray-600 mb-1">Estado</label>
           <select
@@ -139,13 +144,13 @@
           <button
               type="button"
               @click="$emit('close')"
-              class="bg-gray-400 text-white px-5 py-2 rounded-lg hover:bg-gray-500 transition"
+              class="bg-gray-200 text-black px-5 py-2 rounded-lg hover:bg-gray-300 transition"
           >
             Cancelar
           </button>
           <button
               type="submit"
-              class="bg-teal-600 text-white px-5 py-2 rounded-lg hover:bg-teal-700 transition"
+              class="bg-teal-500 text-black px-5 py-2 rounded-lg hover:bg-teal-600 transition"
           >
             Guardar cambios
           </button>
@@ -158,6 +163,8 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { odontologistRepositoryImpl } from "@/modules/practiceManagement/data/repositories/odontologistRepositoryImpl.js";
+import { servicePerClinicApi } from "@/modules/clinicManagement/data/datasource/servicePerClinicApi.js";
+import { useAuthStore } from "@/modules/iam/stores/authStore.js";
 
 const props = defineProps({
   odontologist: { type: Object, required: true },
@@ -175,11 +182,26 @@ const form = ref({
   professionalLicenseNumber: "",
   specialtyRegistrationNumber: "",
   specialty: "",
-  serviceId: 1,
+  serviceId: "",
   isActive: true,
 });
 
-onMounted(() => {
+const services = ref([]);
+const authStore = useAuthStore();
+
+onMounted(async () => {
+  // Cargar servicios de la clínica
+  try {
+    const clinicId = authStore.user?.clinicId;
+    if (clinicId) {
+      const data = await servicePerClinicApi.getAllByClinic(clinicId);
+      services.value = data;
+    }
+  } catch (e) {
+    console.error("❌ Error cargando servicios:", e);
+  }
+
+  // Inicializar formulario con los datos del odontólogo
   if (props.odontologist) {
     Object.assign(form.value, {
       gender: props.odontologist.gender || "",
@@ -191,7 +213,7 @@ onMounted(() => {
       professionalLicenseNumber: props.odontologist.professionalLicenseNumber || "",
       specialtyRegistrationNumber: props.odontologist.specialtyRegistrationNumber || "",
       specialty: props.odontologist.specialty || "",
-      serviceId: props.odontologist.serviceId || 1,
+      serviceId: props.odontologist.serviceId || "",
       isActive: props.odontologist.isActive ?? true,
     });
   }
@@ -219,8 +241,8 @@ const handleUpdate = async () => {
   }
 };
 </script>
-<style scoped>
 
+<style scoped>
 .fixed {
   position: fixed;
   inset: 0;
@@ -230,52 +252,5 @@ const handleUpdate = async () => {
   align-items: center;
   background-color: rgba(17, 24, 39, 0.7);
   backdrop-filter: blur(4px);
-  animation: fadeOverlay 0.25s ease-out;
-}
-
-
-.modal-content {
-  background: white;
-  border-radius: 1rem;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-  width: 100%;
-  max-width: 650px;
-  padding: 2rem;
-  animation: fadeInUp 0.3s ease-out;
-  max-height: 90vh;
-  overflow-y: auto;
-}
-
-
-.close-btn {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  color: #6b7280;
-  transition: color 0.2s;
-}
-.close-btn:hover {
-  color: #111827;
-}
-
-
-@keyframes fadeOverlay {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 </style>

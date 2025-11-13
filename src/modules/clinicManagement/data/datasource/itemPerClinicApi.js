@@ -2,7 +2,7 @@ import BaseService from '@/shared/serivces/BaseService.js';
 
 class ItemPerClinicApi extends BaseService {
     constructor() {
-        super('/items-per-clinics');
+        super('/clinic-management-service/api/v1/items-per-clinics');
     }
 
     async getByClinicId(clinicId) {
