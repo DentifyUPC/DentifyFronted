@@ -9,10 +9,8 @@ export class AuthRepositoryImpl extends AuthRepository {
         const data = await authApi.login(username, password);
         const user = UserMapper.toDomain(data);
 
-        // 🧩 Guardamos token y refreshToken
         if (user.accessToken) {
             TokenStorage.setAccessToken(user.accessToken);
-            // 🔥 Reinyectamos el header para el cliente actual
             import('@/core/network/api.js').then(({ default: api }) => {
                 api.defaults.headers.common['Authorization'] = `Bearer ${user.accessToken}`;
             });
@@ -22,7 +20,6 @@ export class AuthRepositoryImpl extends AuthRepository {
             TokenStorage.setRefreshToken(user.refreshToken);
         }
 
-        // 🧩 Guardamos user completo (para el menú y roles)
         localStorage.setItem("user", JSON.stringify(user));
 
         return user;
@@ -64,7 +61,7 @@ export class AuthRepositoryImpl extends AuthRepository {
         const body = {
             ...data,
             birthDate: formattedDate,
-            roleId: 2, // 🦷 Rol de odontólogo
+            roleId: 2,
         };
 
         const res = await authApi.registerOdontologist(body);
@@ -75,10 +72,10 @@ export class AuthRepositoryImpl extends AuthRepository {
     async getProfile() {
         try {
             const data = await profileApi.getProfile();
-            console.log('🌐 Respuesta cruda del backend:', data);
+            console.log('Respuesta cruda del backend:', data);
             return UserMapper.toDomain(data);
         } catch (error) {
-            console.error('❌ Error al obtener perfil:', error);
+            console.error('Error al obtener perfil:', error);
             throw error;
         }
     }
