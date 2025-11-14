@@ -10,7 +10,6 @@ const api = axios.create({
 
 console.log('🌐 API BASE URL:', baseURL);
 
-// ✅ Interceptor de request: añade el token automáticamente
 api.interceptors.request.use(
     (config) => {
         const token = TokenStorage.getAccessToken();
@@ -22,7 +21,6 @@ api.interceptors.request.use(
     (error) => Promise.reject(error)
 );
 
-// ✅ Interceptor de respuesta: maneja expiración de token
 api.interceptors.response.use(
     (response) => response,
     (error) => {

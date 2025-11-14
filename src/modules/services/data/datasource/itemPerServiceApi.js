@@ -1,8 +1,8 @@
-import BaseService from '@/shared/serivces/BaseService.js';
+import BaseService from '@/shared/services/BaseService.js';
 
 class ItemPerServiceApi extends BaseService {
     constructor() {
-        super('/items-per-services');
+        super('/service-catalog-service/api/v1/items-per-services');
     }
 
     async getByServiceId(serviceId) {

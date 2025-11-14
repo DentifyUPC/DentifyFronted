@@ -48,7 +48,7 @@ export const useAuthStore = defineStore('auth', {
                 await authRepositoryImpl.registerPatient(payload);
                 return true;
             } catch (error) {
-                console.error("❌ Error en registro:", error);
+                console.error("Error en registro:", error);
                 return false;
             }
         },
@@ -57,7 +57,7 @@ export const useAuthStore = defineStore('auth', {
                 await authRepositoryImpl.registerOdontologist(payload);
                 return true;
             } catch (error) {
-                console.error("❌ Error en registro de odontólogo:", error);
+                console.error(" Error en registro de odontólogo:", error);
                 return false;
             }
         },

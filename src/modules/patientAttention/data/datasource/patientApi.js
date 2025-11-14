@@ -1,8 +1,8 @@
-import BaseService from "@/shared/serivces/baseService.js";
+import BaseService from "@/shared/services/baseService.js";
 
 class PatientApi extends BaseService {
     constructor() {
-        super("/patients");
+        super("/patient-attention-service/api/v1/patients");
     }
 
 

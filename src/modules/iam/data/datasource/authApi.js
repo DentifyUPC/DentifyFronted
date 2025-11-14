@@ -1,8 +1,8 @@
-import BaseService from '@/shared/serivces/baseService.js';
+import BaseService from '@/shared/services/baseService.js';
 
 class AuthApi extends BaseService {
     constructor() {
-        super('/auth');
+        super('/iam-service/api/v1/auth');
     }
 
     async login(username, password) {

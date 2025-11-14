@@ -2,8 +2,8 @@ export class Odontologist {
     constructor({
                     id = null,
                     userId = null,
-                    firstName = '',
-                    lastName = '',
+                    firstName = "",
+                    lastName = "",
                     birthDate = null,
                     email = null,
                     gender = null,
@@ -13,6 +13,7 @@ export class Odontologist {
                     specialty = null,
                     specialtyRegistrationNumber = null,
                     serviceId = null,
+                    shiftName = null,
                     isActive = true,
                     age = null,
                     street = null,
@@ -33,6 +34,7 @@ export class Odontologist {
         this.specialty = specialty;
         this.specialtyRegistrationNumber = specialtyRegistrationNumber;
         this.serviceId = serviceId;
+        this.shiftName = shiftName;
         this.isActive = isActive;
         this.age = age;
         this.street = street;
@@ -42,6 +44,26 @@ export class Odontologist {
     }
 
     get fullName() {
-        return `${this.firstName || ''} ${this.lastName || ''}`.trim();
+        return `${this.firstName || ""} ${this.lastName || ""}`.trim();
+    }
+
+    get fullAddress() {
+        const parts = [this.street, this.district, this.province, this.department].filter(Boolean);
+        return parts.length > 0 ? parts.join(", ") : null;
+    }
+
+    get isProfileComplete() {
+        return Boolean(
+            this.professionalLicenseNumber &&
+            this.specialty &&
+            this.serviceId &&
+            this.shiftName &&
+            this.phoneNumber &&
+            this.gender
+        );
+    }
+
+    get canTakeAppointments() {
+        return this.isActive && this.isProfileComplete;
     }
 }

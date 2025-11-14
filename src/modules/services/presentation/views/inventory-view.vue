@@ -15,8 +15,8 @@
         Cargando inventario...
       </div>
 
-      <div v-else-if="store.error || itemsStore.error" class="text-center text-red-500 py-4">
-        Error: {{ store.error || itemsStore.error }}
+      <div v-else-if="store.error || itemsStore.error" class="text-center text-gray-500 py-4">
+        No tiene itemes agregado, agregue uno
       </div>
 
       <table v-else class="w-full text-left border-collapse">

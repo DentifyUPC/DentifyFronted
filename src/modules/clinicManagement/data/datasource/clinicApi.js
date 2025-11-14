@@ -1,8 +1,8 @@
-import BaseService from '@/shared/serivces/BaseService.js';
+import BaseService from '@/shared/services/BaseService.js';
 
 class ClinicApi extends BaseService {
     constructor() {
-        super('/clinics');
+        super('/clinic-management-service/api/v1/clinics');
     }
 
     async getClinicsForRegister() {

@@ -24,7 +24,7 @@ export const useItemsStore = defineStore('items', {
                 this.applyFilter();
             } catch (err) {
                 this.error = err.response?.data || err.message || String(err);
-                console.error('❌ Error en fetchAll items store:', err);
+                console.error('Error en fetchAll items store:', err);
             } finally {
                 this.isLoading = false;
             }
