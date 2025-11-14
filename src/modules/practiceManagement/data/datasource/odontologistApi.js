@@ -1,23 +1,28 @@
-import BaseService from "@/shared/serivces/baseService.js";
+import BaseService from "@/shared/services/baseService.js";
 
 class OdontologistApi extends BaseService {
     constructor() {
         super("/practice-management-service/api/v1/odontologists");
     }
 
-    getByUserId(userId) {
-        return this.get(`user/${userId}`);
+    async getByUserId(userId) {
+        return await this.get(`/user/${userId}`);
     }
 
-    getByOdontologistId(odontologistId) {
-        return this.get(`${odontologistId}`);
-    }
-    updateOdontologist(odontologistId, data) {
-        return this.put(`${odontologistId}`, data);
+    async getById(odontologistId) {
+        return await this.get(`/${odontologistId}`);
     }
 
-    getByClinicId(clinicId) {
-        return this.get(`clinics/${clinicId}/odontologists`);
+    async update(odontologistId, payload) {
+        return await this.put(`/${odontologistId}`, payload);
+    }
+
+    async getByClinicId(clinicId) {
+        return await this.get(`/clinics/${clinicId}/odontologists`);
+    }
+
+    async getByShiftName(shiftName) {
+        return await this.get(`/shift/${shiftName}/odontologists`);
     }
 }
 

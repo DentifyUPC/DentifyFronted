@@ -3,7 +3,6 @@
     <div
         class="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-4 p-6 animate-fadeIn overflow-y-auto max-h-[90vh] border border-gray-100"
     >
-      <!-- Botón cerrar -->
       <button
           @click="$emit('close')"
           class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition"
@@ -12,12 +11,10 @@
         <i class="pi pi-times text-xl"></i>
       </button>
 
-      <!-- Título -->
       <h2 class="text-2xl font-semibold text-[#7fb9ee] mb-6 text-center">
-        Detalles del Odontólogo
+        Detalles del Odontologo
       </h2>
 
-      <!-- Información principal -->
       <div class="flex items-center gap-4 mb-6">
         <div class="flex-shrink-0 bg-[#aacff3]/30 p-4 rounded-full">
           <i class="pi pi-user text-4xl text-[#7fb9ee]"></i>
@@ -36,10 +33,9 @@
         </div>
       </div>
 
-      <!-- Datos secundarios -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 text-sm">
-        <p><strong>Teléfono:</strong> {{ odontologist.phoneNumber || '—' }}</p>
-        <p><strong>Género:</strong> {{ odontologist.gender || '—' }}</p>
+        <p><strong>Telefono:</strong> {{ odontologist.phoneNumber || '—' }}</p>
+        <p><strong>Genero:</strong> {{ odontologist.gender || '—' }}</p>
         <p><strong>Especialidad:</strong> {{ odontologist.specialty || '—' }}</p>
         <p><strong>Colegiatura:</strong> {{ odontologist.professionalLicenseNumber || '—' }}</p>
         <p><strong>Reg. Especialidad:</strong> {{ odontologist.specialtyRegistrationNumber || '—' }}</p>
@@ -48,10 +44,10 @@
         <p><strong>Provincia:</strong> {{ odontologist.province || '—' }}</p>
         <p><strong>Distrito:</strong> {{ odontologist.district || '—' }}</p>
         <p><strong>Service ID:</strong> {{ odontologist.serviceId || '—' }}</p>
-        <p class="md:col-span-2"><strong>Dirección:</strong> {{ odontologist.street || '—' }}</p>
+        <p><strong>Turno:</strong> {{ odontologist.shiftName || '—' }}</p>
+        <p class="md:col-span-2"><strong>Direccion:</strong> {{ odontologist.street || '—' }}</p>
       </div>
 
-      <!-- Botones -->
       <div class="flex justify-end gap-3 mt-8">
         <button
             @click="$emit('close')"
@@ -63,11 +59,10 @@
             @click="openUpdateModal"
             class="bg-[#aacff3] text-black px-5 py-2 rounded-lg hover:bg-[#8fc5f0] transition text-sm font-medium shadow-sm"
         >
-          Actualizar información
+          Actualizar informacion
         </button>
       </div>
 
-      <!-- Modal actualizar -->
       <update-odontologist-profile-component
           v-if="showUpdateModal"
           :odontologist="odontologist"
@@ -116,7 +111,6 @@ const handleUpdated = (updatedData) => {
   animation: fadeOverlay 0.25s ease-out;
 }
 
-
 .modal-content {
   background: white;
   border-radius: 1rem;
@@ -129,7 +123,6 @@ const handleUpdated = (updatedData) => {
   overflow-y: auto;
 }
 
-
 .close-btn {
   position: absolute;
   top: 1rem;
@@ -140,7 +133,6 @@ const handleUpdated = (updatedData) => {
 .close-btn:hover {
   color: #111827;
 }
-
 
 @keyframes fadeOverlay {
   from {
@@ -177,4 +169,3 @@ const handleUpdated = (updatedData) => {
   background: #8fc5f0;
 }
 </style>
-
