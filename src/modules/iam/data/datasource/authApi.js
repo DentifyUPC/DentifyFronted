@@ -1,4 +1,4 @@
-import BaseService from '@/shared/serivces/baseService.js';
+import BaseService from '@/shared/services/baseService.js';
 
 class AuthApi extends BaseService {
     constructor() {

@@ -2,40 +2,81 @@
   <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
     <div class="relative bg-white rounded-xl shadow-lg w-full max-w-xs p-5 animate-fadeIn">
 
-      <!-- Cerrar -->
+      <!-- Botón cerrar -->
       <button @click="$emit('close')" class="absolute top-2 right-2 text-gray-400 hover:text-gray-700 transition">
         <i class="pi pi-times text-lg"></i>
       </button>
 
       <!-- Título -->
       <h2 class="text-lg font-semibold text-gray-800 mb-4 text-center">
-        Actualizar Información
+        Cambiar Contraseña
       </h2>
 
       <!-- Formulario -->
-      <form @submit.prevent="handleUpdate" class="space-y-3">
-        <div>
-          <label class="block text-xs text-gray-600 mb-1">Nombre</label>
+      <form @submit.prevent="handleChangePassword" class="space-y-3">
+
+        <!-- Contraseña actual -->
+        <div class="relative">
+          <label class="block text-xs text-gray-600 mb-1">Contraseña actual</label>
           <input
-              v-model="form.firstName"
-              type="text"
-              placeholder="Tu nombre"
-              class="w-full p-2 rounded-md border border-gray-300 text-gray-800 text-sm focus:ring-1 focus:ring-blue-200 focus:border-blue-400 outline-none"
+              v-model="form.currentPassword"
+              :type="showCurrent ? 'text' : 'password'"
+              placeholder="••••••••"
+              required
+              autocomplete="current-password"
+              class="w-full p-2 pr-8 rounded-md border border-gray-300 text-gray-800 text-sm focus:ring-1 focus:ring-blue-200 focus:border-blue-400 outline-none"
           />
+          <button
+              type="button"
+              @click="showCurrent = !showCurrent"
+              class="absolute right-2 top-[26px] text-gray-400 hover:text-gray-600 text-xs"
+          >
+            <i :class="showCurrent ? 'pi pi-eye-slash' : 'pi pi-eye'"></i>
+          </button>
         </div>
 
-        <div>
-          <label class="block text-xs text-gray-600 mb-1">Apellido</label>
+        <!-- Nueva contraseña -->
+        <div class="relative">
+          <label class="block text-xs text-gray-600 mb-1">Nueva contraseña</label>
           <input
-              v-model="form.lastName"
-              type="text"
-              placeholder="Tu apellido"
-              class="w-full p-2 rounded-md border border-gray-300 text-gray-800 text-sm focus:ring-1 focus:ring-blue-200 focus:border-blue-400 outline-none"
+              v-model="form.newPassword"
+              :type="showNew ? 'text' : 'password'"
+              placeholder="Nueva contraseña"
+              required
+              autocomplete="new-password"
+              class="w-full p-2 pr-8 rounded-md border border-gray-300 text-gray-800 text-sm focus:ring-1 focus:ring-blue-200 focus:border-blue-400 outline-none"
           />
+          <button
+              type="button"
+              @click="showNew = !showNew"
+              class="absolute right-2 top-[26px] text-gray-400 hover:text-gray-600 text-xs"
+          >
+            <i :class="showNew ? 'pi pi-eye-slash' : 'pi pi-eye'"></i>
+          </button>
+        </div>
+
+        <!-- Confirmar nueva contraseña -->
+        <div class="relative">
+          <label class="block text-xs text-gray-600 mb-1">Confirmar nueva contraseña</label>
+          <input
+              v-model="form.confirmPassword"
+              :type="showConfirm ? 'text' : 'password'"
+              placeholder="Confirmar contraseña"
+              required
+              autocomplete="new-password"
+              class="w-full p-2 pr-8 rounded-md border border-gray-300 text-gray-800 text-sm focus:ring-1 focus:ring-blue-200 focus:border-blue-400 outline-none"
+          />
+          <button
+              type="button"
+              @click="showConfirm = !showConfirm"
+              class="absolute right-2 top-[26px] text-gray-400 hover:text-gray-600 text-xs"
+          >
+            <i :class="showConfirm ? 'pi pi-eye-slash' : 'pi pi-eye'"></i>
+          </button>
         </div>
 
         <!-- Botones -->
-        <div class="flex justify-end gap-2 mt-3">
+        <div class="flex justify-end gap-2 mt-4">
           <button
               type="button"
               @click="$emit('close')"
@@ -45,7 +86,7 @@
           </button>
           <button
               type="submit"
-              class="bg-blue-500 text-white px-3 py-1.5 rounded-md hover:bg-blue-600 text-sm shadow-sm transition"
+              class="bg-[#4a89c5] text-white px-3 py-1.5 rounded-md hover:bg-[#3a75ab] text-sm shadow-sm transition"
           >
             Guardar
           </button>
@@ -57,19 +98,44 @@
 
 <script setup>
 import { ref } from "vue";
-import { authRepositoryImpl } from "@/modules/iam/data/repositories/authRepositoryImpl.js";
+import { profileApi } from "@/modules/iam/data/datasource/profileApi.js";
 
 const emit = defineEmits(["close", "updated"]);
-const form = ref({ firstName: "", lastName: "" });
 
-const handleUpdate = async () => {
+const form = ref({
+  currentPassword: "",
+  newPassword: "",
+  confirmPassword: "",
+});
+
+
+const showCurrent = ref(false);
+const showNew = ref(false);
+const showConfirm = ref(false);
+
+const handleChangePassword = async () => {
   try {
-    const updated = await authRepositoryImpl.updateInformation(form.value);
-    alert("✅ Información actualizada correctamente");
-    emit("updated", updated);
+    const { currentPassword, newPassword, confirmPassword } = form.value;
+
+    if (newPassword !== confirmPassword) {
+      alert("Las contraseñas no coinciden");
+      return;
+    }
+
+    const payload = {
+      oldPassword: currentPassword,
+      newPassword,
+      confirmNewPassword: confirmPassword,
+    };
+
+    await profileApi.updatePassword(payload);
+
+    alert("Contraseña actualizada correctamente");
+    emit("updated");
+    emit("close");
   } catch (error) {
-    console.error("❌ Error al actualizar información:", error);
-    alert("Ocurrió un error al actualizar los datos.");
+    console.error("Error al cambiar contraseña:", error);
+    alert("No se pudo actualizar la contraseña. Verifica los datos.");
   }
 };
 </script>
@@ -83,58 +149,20 @@ const handleUpdate = async () => {
   animation: fadeIn 0.25s ease-out;
 }
 
- .fixed {
-   position: fixed;
-   inset: 0;
-   z-index: 9999;
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   background-color: rgba(17, 24, 39, 0.7);
-   backdrop-filter: blur(4px);
-   animation: fadeOverlay 0.25s ease-out;
- }
-
-.modal-content {
-  background: white;
-  border-radius: 1rem;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-  width: 100%;
-  max-width: 650px;
-  padding: 2rem;
-  animation: fadeInUp 0.3s ease-out;
-  max-height: 90vh;
-  overflow-y: auto;
-}
-
-.close-btn {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  color: #6b7280;
-  transition: color 0.2s;
-}
-.close-btn:hover {
-  color: #111827;
+.fixed {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(17, 24, 39, 0.7);
+  backdrop-filter: blur(4px);
+  animation: fadeOverlay 0.25s ease-out;
 }
 
 @keyframes fadeOverlay {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 </style>

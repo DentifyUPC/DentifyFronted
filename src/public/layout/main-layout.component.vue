@@ -119,7 +119,7 @@ const user = JSON.parse(localStorage.getItem("user") || "{}");
 const menuConfig = {
   1: [
     { label: "Dashboard", route: "/home/dashboard", icon: "pi-home" },
-    { label: "Horarios", route: "/home/schedules", icon: "pi-clock" },
+    { label: "Horarios", route: "/home/schedule-management", icon: "pi-clock" },
     { label: "Odontólogos", route: "/home/clinic-odontologist", icon: "pi-user" },
     { label: "Servicios", route: "/home/admin-services", icon: "pi-briefcase" },
     { label: "Inventario", route: "/home/admin-inventory", icon: "pi-box" },
@@ -129,12 +129,12 @@ const menuConfig = {
   ],
   2: [
     { label: "Horarios", route: "/home/schedules", icon: "pi-clock" },
-    { label: "Citas", route: "/home/appointments", icon: "pi-calendar" },
+    { label: "Citas", route: "/home/appointment-odontologist", icon: "pi-calendar" },
     { label: "Perfil", route: "/home/profile", icon: "pi-user" },
   ],
   3: [
     { label: "Horarios", route: "/home/schedules", icon: "pi-clock" },
-    { label: "Citas", route: "/home/appointments", icon: "pi-calendar" },
+    { label: "Citas", route: "/home/appointment-patients", icon: "pi-calendar" },
     { label: "Pagos", route: "/home/payments", icon: "pi-credit-card" },
     { label: "Perfil", route: "/home/profile", icon: "pi-user" },
   ],

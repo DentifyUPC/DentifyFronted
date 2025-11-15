@@ -7,7 +7,7 @@ export class ServicePerClinicRepositoryImpl {
             const raw = await servicePerClinicApi.create({ clinicId, serviceId, totalLaborPrice });
             return ServicePerClinicMapper.toDomain(raw);
         } catch (error) {
-            console.error('❌ Error creando service-per-clinic:', error);
+            console.error('Error creando service-per-clinic:', error);
             throw error;
         }
     }
@@ -18,7 +18,7 @@ export class ServicePerClinicRepositoryImpl {
             const raw = await servicePerClinicApi.update(id, payload);
             return ServicePerClinicMapper.toDomain(raw);
         } catch (error) {
-            console.error('❌ Error actualizando service-per-clinic:', error);
+            console.error('Error actualizando service-per-clinic:', error);
             throw error;
         }
     }
@@ -28,7 +28,7 @@ export class ServicePerClinicRepositoryImpl {
             const rawList = await servicePerClinicApi.getAllByClinic(clinicId);
             return ServicePerClinicMapper.toDomainList(rawList);
         } catch (error) {
-            console.error('❌ Error obteniendo servicios por clínica:', error);
+            console.error('Error obteniendo servicios por clínica:', error);
             throw error;
         }
     }

@@ -4,7 +4,6 @@ import RegisterPatientView from '@/modules/iam/presentation/views/register-patie
 import AdminProfileView from '@/modules/iam/presentation/views/profile-view.vue'
 import OdontologistProfileView from '@/modules/practiceManagement/presentation/views/odontologist-profile-view.vue'
 import PatientProfileView from '@/modules/patientAttention/presentation/views/patient-profile-view.vue'
-import UpdatePasswordView from '@/modules/iam/presentation/views/update-password-view.vue'
 import ToolbarLayout from '@/public/layout/main-layout.component.vue'
 import AdminInventoryView from '@/modules/services/presentation/views/inventory-view.vue'
 import AdminServicesView from '@/modules/services/presentation/views/service-view.vue'
@@ -12,6 +11,9 @@ import NotFound from "@/public/not-found.component.vue";
 import ClinicOdontologistsView from "@/modules/practiceManagement/presentation/views/clinic-odontologists-view.vue";
 import { useAuthStore } from '@/modules/iam/stores/authStore.js'
 import ClinicPatientView from "@/modules/patientAttention/presentation/views/clinic-patient-view.vue";
+import ScheduleManagementView from "@/modules/clinicManagement/presentation/views/scheduleManagementView.vue";
+import AppointmentOdontologistView from "@/modules/appointment/presentation/views/appointment-odontologist-view.vue";
+import AppointmentPatientView from "@/modules/appointment/presentation/views/appointment-patient-view.vue";
 
 
 const routes = [
@@ -33,9 +35,10 @@ const routes = [
             { path: 'admin-services', name: 'admin-services', component: AdminServicesView },
             {path: 'clinic-odontologist', name : 'clinic-odontologist', component: ClinicOdontologistsView  },
             {path: 'clinic-patients', name: 'clinic-patients', component: ClinicPatientView },
+            {path: 'schedule-management', name: 'schedule-management', component: ScheduleManagementView },
+            {path: 'appointment-odontologist', name: 'appointment-odontologist', component: AppointmentOdontologistView},
+            {path: 'appointment-patients', name: 'appointment-patients', component: AppointmentPatientView },
 
-
-            { path: 'update-password', name: 'update-password', component: UpdatePasswordView },
         ],
     },
 

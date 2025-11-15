@@ -2,7 +2,7 @@
   <div class="min-h-screen bg-gray-50 py-10 px-4">
     <div class="max-w-6xl mx-auto">
       <h1 class="text-3xl font-bold text-[#aacff3] mb-8 text-center">
-        Odontólogos Asociados a la Clínica
+        Odontologos Asociados a la Clinica
       </h1>
 
       <div class="flex justify-end mb-6">
@@ -11,16 +11,16 @@
             class="bg-[#aacff3] text-black px-4 py-2 rounded-md hover:bg-[#8fc5f0] transition flex items-center gap-2 shadow-sm"
         >
           <i class="fas fa-plus"></i>
-          Añadir Odontólogo
+          Anadir Odontologo
         </button>
       </div>
 
       <div v-if="isLoading" class="text-center text-gray-400 animate-pulse">
-        Cargando odontólogos...
+        Cargando odontologos...
       </div>
 
       <div v-else-if="odontologists.length === 0" class="text-center text-gray-500">
-        <p class="text-lg">No hay odontólogos registrados en esta clínica.</p>
+        <p class="text-lg">No hay odontologos registrados en esta clinica.</p>
       </div>
 
       <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -40,6 +40,9 @@
               </p>
               <p class="text-sm text-gray-500">
                 {{ o.specialty || "Sin especialidad" }}
+              </p>
+              <p class="text-xs text-gray-400">
+                {{ o.shiftName || "Sin turno asignado" }}
               </p>
               <p
                   class="text-xs mt-1 font-medium"
@@ -67,6 +70,7 @@
             :odontologist="selectedOdontologist"
             :userProfile="userProfile"
             @close="selectedOdontologist = null"
+            @updated="handleOdontologistUpdated"
         />
       </Teleport>
 
@@ -102,6 +106,14 @@ const handleOdontologistAdded = (newO) => {
   showAddModal.value = false;
 };
 
+const handleOdontologistUpdated = (updatedData) => {
+  const index = odontologists.value.findIndex(o => o.id === updatedData.id);
+  if (index !== -1) {
+    odontologists.value[index] = updatedData;
+  }
+  selectedOdontologist.value = null;
+};
+
 onMounted(async () => {
   const user = JSON.parse(localStorage.getItem("user") || "null");
   userProfile.value = user;
@@ -114,7 +126,7 @@ onMounted(async () => {
   try {
     odontologists.value = await odontologistRepositoryImpl.getAllByClinic(user.clinicId);
   } catch (e) {
-    console.error("❌ Error al cargar odontólogos:", e);
+    console.error("Error al cargar odontologos:", e);
   } finally {
     isLoading.value = false;
   }

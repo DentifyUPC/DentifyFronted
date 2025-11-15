@@ -19,8 +19,8 @@
       </div>
 
       <!-- Error -->
-      <div v-else-if="error" class="text-red-500 text-lg text-center py-10">
-        ❌ Error al cargar los servicios: {{ error }}
+      <div v-else-if="error" class="text-grey-500 text-lg text-center py-10">
+        No tiene servicios, agregue uno
       </div>
 
       <!-- Lista -->
@@ -88,7 +88,7 @@
         @updated="handleServiceUpdated"
     />
 
-    <!-- 🟦 Modal pequeño centrado -->
+
     <div
         v-if="showDetails"
         class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm"
@@ -156,7 +156,7 @@ onMounted(async () => {
     const data = await store.fetchServicesByClinic(clinicId);
     services.value = data;
   } catch (err) {
-    console.error('❌ Error cargando services-per-clinic:', err);
+    console.error('Error cargando services-per-clinic:', err);
     error.value = err.response?.data?.message || err.message;
   } finally {
     isLoading.value = false;

@@ -22,7 +22,7 @@
 
       <!-- Error -->
       <div v-else-if="error" class="text-red-500 text-lg text-center py-8">
-        ❌ {{ error }}
+         {{ error }}
       </div>
 
       <!-- Lista -->
@@ -90,7 +90,7 @@ onMounted(async () => {
     const data = await servicesRepositoryImpl.getAll();
     services.value = data;
   } catch (err) {
-    console.error("❌ Error cargando servicios:", err);
+    console.error("Error cargando servicios:", err);
     error.value = err.response?.data?.message || err.message;
   } finally {
     isLoading.value = false;

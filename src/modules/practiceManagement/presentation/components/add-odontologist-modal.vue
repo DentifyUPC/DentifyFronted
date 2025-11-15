@@ -9,7 +9,7 @@
       </button>
 
       <h2 class="text-2xl font-semibold text-[#aacff3] mb-6 text-center">
-        Añadir Nuevo Odontólogo
+        Anadir Nuevo Odontologo
       </h2>
 
       <form @submit.prevent="registerOdontologist" class="space-y-4">
@@ -25,17 +25,17 @@
         </div>
 
         <div>
-          <label class="block text-gray-700 text-sm mb-1">Usuario (DNI o Código)</label>
+          <label class="block text-gray-700 text-sm mb-1">Usuario (DNI o Codigo)</label>
           <input v-model="username" type="text" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#aacff3]" required />
         </div>
 
         <div>
-          <label class="block text-gray-700 text-sm mb-1">Correo Electrónico</label>
+          <label class="block text-gray-700 text-sm mb-1">Correo Electronico</label>
           <input v-model="email" type="email" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#aacff3]" required />
         </div>
 
         <div>
-          <label class="block text-gray-700 text-sm mb-1">Contraseña</label>
+          <label class="block text-gray-700 text-sm mb-1">Contrasena</label>
           <input v-model="password" type="password" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#aacff3]" required />
         </div>
 
@@ -45,7 +45,7 @@
             <select v-model="identificationTypeId" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#aacff3]">
               <option disabled value="">Selecciona</option>
               <option :value="1">DNI</option>
-              <option :value="2">Carnet de Extranjería</option>
+              <option :value="2">Carnet de Extranjeria</option>
             </select>
           </div>
 
@@ -102,14 +102,14 @@ const registerOdontologist = async () => {
     email: email.value,
     identificationTypeId: identificationTypeId.value,
     clinicId: admin.clinicId,
-    roleId: 3,
+    roleId: 2,
   };
 
   try {
     const newO = await authStore.registerOdontologist(payload);
     emit("added", newO);
   } catch (e) {
-    console.error("❌ Error al registrar odontólogo:", e);
+    console.error("Error al registrar odontologo:", e);
   }
 };
 </script>
