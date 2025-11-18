@@ -14,6 +14,12 @@ import ClinicPatientView from "@/modules/patientAttention/presentation/views/cli
 import ScheduleManagementView from "@/modules/clinicManagement/presentation/views/scheduleManagementView.vue";
 import AppointmentOdontologistView from "@/modules/appointment/presentation/views/appointment-odontologist-view.vue";
 import AppointmentPatientView from "@/modules/appointment/presentation/views/appointment-patient-view.vue";
+import ToothStatusView from "@/modules/patientAttention/presentation/views/tooth-status-view.vue";
+import PatientControlPanelView from "@/modules/patientAttention/presentation/views/patient-control-panel-view.vue";
+import AnamnesisView from "@/modules/patientAttention/presentation/views/anamnesis-view.vue";
+import PrescriptionView from "@/modules/patientAttention/presentation/views/prescription-view.vue";
+import OdontogramaView from "@/modules/patientAttention/presentation/views/odontograma-view.vue";
+import ClinicalRecordView from "@/modules/patientAttention/presentation/views/clinical-record-view.vue";
 
 
 const routes = [
@@ -38,6 +44,12 @@ const routes = [
             {path: 'schedule-management', name: 'schedule-management', component: ScheduleManagementView },
             {path: 'appointment-odontologist', name: 'appointment-odontologist', component: AppointmentOdontologistView},
             {path: 'appointment-patients', name: 'appointment-patients', component: AppointmentPatientView },
+            {path: 'tooth-status', name: 'tooth-status', component: ToothStatusView },
+            {path: 'patient-control/:patientId', name: 'patient-control-panel', component: PatientControlPanelView },
+            {path: 'patient-anamnesis/:patientId', name: 'patient-anamnesis', component: AnamnesisView},
+            {path: 'patient-prescription/:patientId', name: 'patient-prescription', component: PrescriptionView},
+            {path: 'patient-odontograma/:patientId', name: 'patient-odontograma', component: OdontogramaView},
+            {path: 'patient-clinical-record/:patientId', name: 'patient-clinical-record', component: ClinicalRecordView},
 
         ],
     },

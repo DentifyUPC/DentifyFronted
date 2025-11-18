@@ -58,12 +58,20 @@
               </td>
 
               <td class="py-3 px-4 text-center">
-                <button
-                    @click="openUpdateModal(apt)"
-                    class="bg-[#2B6D8C] text-white px-4 py-1 rounded-lg hover:bg-[#1E4F67] transition text-sm"
-                >
-                  Actualizar
-                </button>
+                <div class="flex items-center gap-2 justify-center">
+                  <button
+                      @click="openUpdateModal(apt)"
+                      class="bg-[#2B6D8C] text-white px-3 py-1 rounded-lg hover:bg-[#1E4F67] transition text-sm"
+                  >
+                    Actualizar
+                  </button>
+                  <button
+                      @click="openPatientPanel(apt)"
+                      class="bg-green-600 text-white px-3 py-1 rounded-lg hover:bg-green-700 transition text-sm"
+                  >
+                    Panel Control
+                  </button>
+                </div>
               </td>
             </tr>
             </tbody>
@@ -84,11 +92,13 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
+import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/modules/iam/stores/authStore.js';
 import { useAppointmentStore } from '@/modules/appointment/stores/appointmentStore.js';
 import { odontologistRepositoryImpl } from '@/modules/practiceManagement/data/repositories/odontologistRepositoryImpl.js';
 import UpdateAppointmentOdontologistComponent from '@/modules/appointment/presentation/components/update-appointment-odontologist-component.vue';
 
+const router = useRouter();
 const authStore = useAuthStore();
 const appointmentStore = useAppointmentStore();
 
@@ -129,5 +139,12 @@ const openUpdateModal = (apt) => {
 const handleAppointmentUpdated = async () => {
   showUpdateModal.value = false;
   await appointmentStore.fetchByOdontologistId(odontologistId.value);
+};
+
+const openPatientPanel = (apt) => {
+  router.push({
+    name: 'patient-control-panel',
+    params: { patientId: apt.patientId },
+  });
 };
 </script>

@@ -118,7 +118,7 @@ const user = JSON.parse(localStorage.getItem("user") || "{}");
 
 const menuConfig = {
   1: [
-    { label: "Dashboard", route: "/home/dashboard", icon: "pi-home" },
+    { label: "Dashboard", route: "/home/tooth-status", icon: "pi-home" },
     { label: "Horarios", route: "/home/schedule-management", icon: "pi-clock" },
     { label: "Odontólogos", route: "/home/clinic-odontologist", icon: "pi-user" },
     { label: "Servicios", route: "/home/admin-services", icon: "pi-briefcase" },
