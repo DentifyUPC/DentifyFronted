@@ -14,6 +14,8 @@ export class Patient {
                     district,
                     province,
                     department,
+                    anamnesisId = null,
+                    prescriptionId = null,
                 }) {
         this.id = id;
         this.firstName = firstName;
@@ -29,6 +31,8 @@ export class Patient {
         this.district = district;
         this.province = province;
         this.department = department;
+        this.anamnesisId = anamnesisId;
+        this.prescriptionId = prescriptionId;
     }
 
     get fullName() {
