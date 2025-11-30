@@ -32,11 +32,6 @@
           💊 Receta Médica
         </h2>
 
-        <!-- Prescription ID -->
-        <div class="mb-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
-          <p class="text-xs text-gray-500 mb-1">ID de Receta</p>
-          <p class="text-sm font-semibold text-gray-800">{{ prescription.id }}</p>
-        </div>
 
         <!-- Effects/Indications -->
         <div class="mb-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
@@ -97,8 +92,8 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { prescriptionRepositoryImpl } from '../../data/repositories/prescriptionRepositoryImpl.js';
-import { prescriptionItemRepositoryImpl } from '../../data/repositories/prescriptionItemRepositoryImpl.js';
+import { prescriptionRepositoryImpl } from '../../../patientAttention/data/repositories/prescriptionRepositoryImpl.js';
+import { prescriptionItemRepositoryImpl } from '../../../patientAttention/data/repositories/prescriptionItemRepositoryImpl.js';
 
 const props = defineProps({
   appointmentId: { type: Number, required: true },
@@ -153,7 +148,7 @@ const loadMedications = async (prescriptionId) => {
 </script>
 
 <style scoped>
-@import "primeicons/primeicons.css";
+@import "../../../../../node_modules/primeicons/primeicons.css";
 .fixed {
   position: fixed;
   inset: 0;

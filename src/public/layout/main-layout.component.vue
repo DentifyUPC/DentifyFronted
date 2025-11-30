@@ -128,13 +128,13 @@ const menuConfig = {
     { label: "Perfil", route: "/home/profile", icon: "pi-user" },
   ],
   2: [
-    { label: "Horarios", route: "/home/schedules", icon: "pi-clock" },
+    { label: "Horarios", route: "/home/odontologist-schedule", icon: "pi-clock" },
     { label: "Citas", route: "/home/appointment-odontologist", icon: "pi-calendar" },
     { label: "Perfil", route: "/home/profile", icon: "pi-user" },
   ],
   3: [
     { label: "Horarios", route: "/home/schedules", icon: "pi-clock" },
-    { label: "Citas", route: "/home/appointment-patients", icon: "pi-calendar" },
+    { label: "Citas", route: "/home/appointment-patients", icon: "pi-calendar"},
     { label: "Pagos", route: "/home/payments", icon: "pi-credit-card" },
     { label: "Perfil", route: "/home/profile", icon: "pi-user" },
   ],

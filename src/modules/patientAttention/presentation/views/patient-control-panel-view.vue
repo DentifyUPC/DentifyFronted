@@ -54,7 +54,8 @@
         >
           <div class="flex items-center gap-4">
             <div class="bg-[#2B6D8C] p-4 rounded-lg group-hover:bg-[#1E4F67] transition">
-              <i class="pi pi-file-medical text-white text-3xl"></i>
+              <i class="pi pi-heart text-white text-3xl"></i>
+
             </div>
             <div>
               <h2 class="text-2xl font-bold text-gray-800 mb-1">Anamnesis del Paciente</h2>
@@ -84,7 +85,8 @@
         >
           <div class="flex items-center gap-4">
             <div class="bg-purple-600 p-4 rounded-lg group-hover:bg-purple-700 transition">
-              <i class="pi pi-file-image text-white text-3xl"></i>
+              <i class="pi pi-image text-white text-3xl"></i>
+
             </div>
             <div>
               <h2 class="text-2xl font-bold text-gray-800 mb-1">Odontograma</h2>
@@ -135,10 +137,8 @@ onMounted(async () => {
       return;
     }
 
-    // Obtener información del paciente
     patient.value = await patientRepositoryImpl.getByPatientId(patientId);
 
-    // Obtener registro clínico
     try {
       const response = await clinicalRecordApi.getByPatientId(patientId);
       clinicalRecord.value = response.data || response;

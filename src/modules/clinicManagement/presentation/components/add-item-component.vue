@@ -80,3 +80,62 @@ async function saveItem() {
   }
 }
 </script>
+<style scoped>
+.fixed {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(17, 24, 39, 0.7);
+  backdrop-filter: blur(4px);
+  animation: fadeOverlay 0.25s ease-out;
+}
+
+
+.modal-content {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 650px;
+  padding: 2rem;
+  animation: fadeInUp 0.3s ease-out;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+
+.close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  color: #6b7280;
+  transition: color 0.2s;
+}
+.close-btn:hover {
+  color: #111827;
+}
+
+
+@keyframes fadeOverlay {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>

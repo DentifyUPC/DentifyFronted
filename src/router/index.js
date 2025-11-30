@@ -20,6 +20,7 @@ import AnamnesisView from "@/modules/patientAttention/presentation/views/anamnes
 import PrescriptionView from "@/modules/patientAttention/presentation/views/prescription-view.vue";
 import OdontogramaView from "@/modules/patientAttention/presentation/views/odontograma-view.vue";
 import ClinicalRecordView from "@/modules/patientAttention/presentation/views/clinical-record-view.vue";
+import OdontologistScheduleView from "@/modules/practiceManagement/presentation/views/odontologist-schedule-view.vue";
 
 
 const routes = [
@@ -50,6 +51,7 @@ const routes = [
             {path: 'patient-prescription/:patientId', name: 'patient-prescription', component: PrescriptionView},
             {path: 'patient-odontograma/:patientId', name: 'patient-odontograma', component: OdontogramaView},
             {path: 'patient-clinical-record/:patientId', name: 'patient-clinical-record', component: ClinicalRecordView},
+            {path: 'odontologist-schedule', name: 'odontologist-schedule', component: OdontologistScheduleView},
 
         ],
     },
