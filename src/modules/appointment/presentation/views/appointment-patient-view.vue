@@ -48,13 +48,14 @@
           </div>
           <div class="flex items-center gap-3">
             <button
-              v-if="apt.isCompleted"
-              @click="openPrescriptionModal(apt.id)"
-              class="px-3 py-1.5 text-sm bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition flex items-center gap-1"
+                v-if="apt.isAssisted"
+                @click="openPrescriptionModal(apt.id)"
+                class="px-3 py-1.5 text-sm bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition flex items-center gap-1"
             >
               <i class="pi pi-file-pdf text-sm"></i>
               <span>Ver Receta</span>
             </button>
+
             <span
                 class="px-4 py-1 rounded-full text-sm font-medium whitespace-nowrap"
                 :class="{
@@ -90,7 +91,7 @@ import { useAuthStore } from '@/modules/iam/stores/authStore.js';
 import { appointmentRepositoryImpl } from '@/modules/appointment/data/repositories/appointmentRepositoryImpl.js';
 import { patientApi } from '@/modules/patientAttention/data/datasource/patientApi.js';
 import CreateAppointmentPatientComponent from '@/modules/appointment/presentation/components/create-appointment-patient-component.vue';
-import GetPrescriptionComponent from '@/modules/patientAttention/presentation/components/get-prescription-component.vue';
+import GetPrescriptionComponent from '@/modules/appointment/presentation/components/get-prescription-component.vue';
 
 const authStore = useAuthStore();
 const showCreateModal = ref(false);
@@ -114,18 +115,19 @@ const loadAppointments = async () => {
     patientId.value = patient.id;
     const response = await appointmentRepositoryImpl.getByPatientId(patient.id);
     const appts = response.data || response;
-    
+
     appointments.value = appts.map(apt => ({
       ...apt,
-      isCompleted: apt.state === 'COMPLETED' || apt.state === 'completed',
-      isPending: apt.state === 'PENDING' || apt.state === 'pending',
-      isCancelled: apt.state === 'CANCELLED' || apt.state === 'cancelled',
-      stateLabel: 
-        apt.state === 'COMPLETED' ? 'Completada' :
-        apt.state === 'PENDING' ? 'Pendiente' :
-        apt.state === 'CANCELLED' ? 'Cancelada' :
-        apt.state
+      isPending: apt.state === 'PENDING',
+      isAssisted: apt.state === 'ASSISTED',
+      isAbsent: apt.state === 'ABSENT',
+      stateLabel:
+          apt.state === 'PENDING'  ? 'Pendiente' :
+              apt.state === 'ASSISTED' ? 'Asistió'  :
+                  apt.state === 'ABSENT'   ? 'Ausente'  :
+                      apt.state
     }));
+
   } catch (err) {
     error.value = "No se pudieron obtener las citas del paciente.";
   } finally {

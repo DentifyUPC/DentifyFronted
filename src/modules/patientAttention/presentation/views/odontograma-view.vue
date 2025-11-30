@@ -49,11 +49,20 @@
               :key="item.id"
               class="p-4 border-2 border-teal-300 rounded-lg bg-gradient-to-br from-teal-50 to-white hover:shadow-md transition"
             >
-              <div class="text-xs font-bold text-teal-700 mb-2 line-clamp-2">{{ getTeethName(item.teethCode) }}</div>
+              <div class="text-xs font-bold text-teal-700 mb-2 line-clamp-2">
+                {{ item.teethCode }} – {{ getTeethName(item.teethCode) }}
+              </div>
+
               <div class="flex flex-wrap justify-center gap-1">
-                <span class="inline-block px-3 py-1 bg-teal-600 text-white text-xs rounded-full font-medium">
-                  {{ item.toothStatusName || 'Sin estado' }}
-                </span>
+                <div class="flex justify-center">
+                  <img
+                      :src="getToothImage(item.toothStatusName)"
+                      alt="Estado del diente"
+                      class="tooth-icon"
+                  />
+
+                </div>
+
               </div>
             </div>
           </div>
@@ -135,6 +144,17 @@ onMounted(async () => {
     isLoading.value = false;
   }
 });
+const getToothImage = (status) => {
+  if (!status) return new URL('@/assets/img/dientemalo.png', import.meta.url).href;
+
+  const normalized = status.trim().toLowerCase();
+
+  if (normalized === 'sano') {
+    return new URL('@/assets/img/dientebueno.png', import.meta.url).href;
+  }
+
+  return new URL('@/assets/img/dientemalo.png', import.meta.url).href;
+};
 
 const openUpdateModal = () => {
   console.log('📝 Opening odontogram modal');
@@ -172,4 +192,12 @@ const goBack = () => {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+.tooth-icon {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  display: block;
+}
+
 </style>

@@ -43,7 +43,6 @@
             >
               <div class="flex items-start justify-between mb-4">
                 <div class="flex-grow">
-                  <p class="text-xs text-gray-500 mb-2">Prescripción ID: {{ prescription.id }}</p>
                   <h3 class="text-lg font-semibold text-blue-700 mb-2">💊 Prescripción</h3>
                   <p class="text-gray-800 text-sm">{{ prescription.effects || 'Sin efectos registrados' }}</p>
                 </div>

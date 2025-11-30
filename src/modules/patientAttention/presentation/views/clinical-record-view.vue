@@ -43,7 +43,7 @@
             >
               <div class="flex items-start justify-between mb-3">
                 <div class="flex-grow">
-                  <p class="text-xs text-gray-500 mb-2">Entrada ID: {{ entry.id }}</p>
+
                   <h3 class="text-lg font-semibold text-teal-700 mb-2">Evolución</h3>
                   <p class="text-gray-800 text-sm mb-4">{{ entry.evolution || 'Sin descripción' }}</p>
                   
