@@ -18,6 +18,7 @@ export class AppointmentMapper {
              clinicId: dto.clinicId,
              patientFirstName: dto.patientFirstName,
              patientLastName: dto.patientLastName,
+             serviceId: dto.serviceId,
          });
      }
 
@@ -50,6 +51,7 @@ export class AppointmentMapper {
             appointmentDate: data.appointmentDate,
             shiftName: data.shiftName,
             clinicId: data.clinicId,
+            serviceId: data.serviceId,
         };
     }
 
