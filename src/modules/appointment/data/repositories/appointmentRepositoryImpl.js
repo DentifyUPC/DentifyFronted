@@ -29,6 +29,7 @@ export const appointmentRepositoryImpl = {
     },
 
     async create(payload) {
+        console.log("payload final antes de enviar:", JSON.stringify(payload));
         try {
             const dto = AppointmentMapper.toCreatePayload(payload);
             const data = await appointmentApi.create(dto);
