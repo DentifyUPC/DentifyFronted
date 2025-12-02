@@ -118,13 +118,13 @@ const user = JSON.parse(localStorage.getItem("user") || "{}");
 
 const menuConfig = {
   1: [
-    { label: "Dashboard", route: "/home/tooth-status", icon: "pi-home" },
+    { label: "Dashboard", route: "/home/admin-dashboard", icon: "pi-home" },
     { label: "Horarios", route: "/home/schedule-management", icon: "pi-clock" },
     { label: "Odontólogos", route: "/home/clinic-odontologist", icon: "pi-user" },
     { label: "Servicios", route: "/home/admin-services", icon: "pi-briefcase" },
     { label: "Inventario", route: "/home/admin-inventory", icon: "pi-box" },
     { label: "Pacientes", route: "/home/clinic-patients", icon: "pi-users" },
-    { label: "Pagos", route: "/home/payments", icon: "pi-dollar" },
+    { label: "Pagos", route: "/home/admin-payments", icon: "pi-dollar" },
     { label: "Perfil", route: "/home/profile", icon: "pi-user" },
   ],
   2: [
@@ -133,9 +133,8 @@ const menuConfig = {
     { label: "Perfil", route: "/home/profile", icon: "pi-user" },
   ],
   3: [
-    { label: "Horarios", route: "/home/schedules", icon: "pi-clock" },
     { label: "Citas", route: "/home/appointment-patients", icon: "pi-calendar"},
-    { label: "Pagos", route: "/home/payments", icon: "pi-credit-card" },
+    { label: "Pagos", route: "/home/patient-payments", icon: "pi-credit-card" },
     { label: "Perfil", route: "/home/profile", icon: "pi-user" },
   ],
 };
