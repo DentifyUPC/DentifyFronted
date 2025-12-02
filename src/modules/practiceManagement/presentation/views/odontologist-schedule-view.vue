@@ -128,8 +128,8 @@ const daysOfWeek = ref([]);
 const debugAppointments = computed(() => appointmentStore.appointments || []);
 
 // Configuración
-const startHour = 8;  // 8 am
-const endHour = 18;   // 6 pm
+const startHour = 7;  // 8 am
+const endHour = 22;   // 6 pm
 
 // Get current week dates
 function getWeekDates() {

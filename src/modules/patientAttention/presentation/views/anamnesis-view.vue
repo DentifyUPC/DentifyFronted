@@ -103,6 +103,14 @@
             <span>La anamnesis necesita ser completada. Haz clic en "Completar Información" para agregar los datos.</span>
           </p>
         </div>
+
+        <!-- Allergias Section -->
+        <div class="mt-8">
+          <AllergiasMedicationsComponent 
+            v-if="clinicalRecordId"
+            :clinical-record-id="clinicalRecordId"
+          />
+        </div>
       </div>
     </div>
 
@@ -124,11 +132,13 @@ import { patientRepositoryImpl } from '../../data/repositories/patientRepository
 import { anamnesisRepositoryImpl } from '../../data/repositories/anamnesisRepositoryImpl.js';
 import { clinicalRecordApi } from '../../data/datasource/clinicalRecordApi.js';
 import UpdateAnamnesisComponent from '../components/update-anamnesis-component.vue';
+import AllergiasMedicationsComponent from '../components/allergias-medications-component.vue';
 
 const route = useRoute();
 const router = useRouter();
 const patientName = ref('');
 const anamnesisId = ref(null);
+const clinicalRecordId = ref(null);
 const anamnesis = ref(null);
 const isLoading = ref(true);
 const error = ref(null);
@@ -160,8 +170,10 @@ onMounted(async () => {
     const response = await clinicalRecordApi.getByPatientId(patientId);
     const clinicalRecord = response.data || response;
     anamnesisId.value = clinicalRecord?.anamnesisId;
+    clinicalRecordId.value = clinicalRecord?.id;
     
     console.log('🏥 Anamnesis View - Patient ID:', patientId);
+    console.log('🏥 Anamnesis View - Clinical Record ID:', clinicalRecordId.value);
     console.log('🏥 Anamnesis View - Anamnesis ID:', anamnesisId.value);
 
     if (anamnesisId.value) {
