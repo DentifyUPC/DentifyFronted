@@ -7,7 +7,7 @@ export const useOdontologistStore = defineStore('odontologist', () => {
     const selectedOdontologist = ref(null);
     const isLoading = ref(false);
     const error = ref(null);
-
+//
     const fetchAllByClinic = async (clinicId) => {
         isLoading.value = true;
         error.value = null;
