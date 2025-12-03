@@ -39,7 +39,25 @@
             </option>
           </select>
         </div>
-
+        <div>
+          <label class="block text-xs text-gray-600 mb-1">Servicio</label>
+          <select
+              v-model="selectedService"
+              :disabled="services.length === 0"
+              required
+              class="w-full p-2 rounded-md border border-gray-300 text-gray-800 text-sm focus:ring-1 focus:ring-blue-200 focus:border-[#4a89c5] outline-none
+           disabled:bg-gray-100"
+          >
+            <option disabled value="">Seleccione un servicio</option>
+            <option
+                v-for="(service, index) in services"
+                :key="service.id || index"
+                :value="service.id || service.serviceId"
+            >
+              {{ service.name }} - S/. {{ service.totalServicePrice }}
+            </option>
+          </select>
+        </div>
         <div>
           <label class="block text-xs text-gray-600 mb-1">Fecha</label>
           <input
@@ -103,6 +121,7 @@ import { useAuthStore } from "@/modules/iam/stores/authStore.js";
 import { patientApi } from "@/modules/patientAttention/data/datasource/patientApi.js";
 import { odontologistRepositoryImpl } from "@/modules/practiceManagement/data/repositories/odontologistRepositoryImpl.js";
 import { appointmentRepositoryImpl } from "@/modules/appointment/data/repositories/appointmentRepositoryImpl.js";
+import { servicePerClinicApi} from "@/modules/clinicManagement/data/datasource/servicePerClinicApi.js";
 
 const emit = defineEmits(["close", "created"]);
 const authStore = useAuthStore();
@@ -111,6 +130,9 @@ const patientId = ref(null);
 const clinicId = ref(null);
 const loading = ref(false);
 const errorMessage = ref("");
+
+const services = ref([]);
+const selectedService = ref("");
 
 const form = ref({
   appointmentDate: "",
@@ -129,8 +151,26 @@ const odontologists = ref([]);
 const selectedShift = ref("");
 const selectedOdontologist = ref("");
 
+const loadServices = async () => {
+  if (!clinicId.value) return;
+  try {
+    const response = await servicePerClinicApi.getAllByClinic(clinicId.value);
+    services.value = response.data || response;
+
+    console.log("Servicios cargados:", JSON.stringify(services.value, null, 2));
+    if(services.value.length > 0){
+      console.log("Primer servicio: ", services.value[0]);
+    }
+
+  } catch (e) {
+    console.error("Error cargando servicios por clínica:", e);
+    errorMessage.value = "No se pudieron cargar los servicios de la clínica.";
+  }
+}
+
 onMounted(async () => {
   try {
+
     const user = authStore?.user;
     if (!user || !user.id) {
       errorMessage.value = "Usuario no autenticado correctamente.";
@@ -138,6 +178,10 @@ onMounted(async () => {
     }
 
     clinicId.value = user.clinicId ?? null;
+
+    if(clinicId.value) {
+      await loadServices();
+    }
 
     const patient = await patientApi.getByUserId(user.id);
     if (!patient || !patient.id) {
@@ -149,6 +193,8 @@ onMounted(async () => {
     console.error("Error inicial obteniendo usuario/paciente:", err);
     errorMessage.value = "No se pudieron obtener los datos del paciente o la clínica.";
   }
+
+
 });
 
 const onShiftChange = async () => {
@@ -183,20 +229,27 @@ const handleCreate = async () => {
       return;
     }
 
+    if(!selectedService.value) {
+      errorMessage.value = "Seleccione un Servicio.";
+      return;
+    }
+    console.log("Serive id enciado:", selectedService.value);
+
 
     const appointmentDateFormatted = toDDMMYYYY(form.value.appointmentDate);
 
     const payload = {
       patientId: patientId.value,
       odontologistId: selectedOdontologist.value,
-      appointmentDate: appointmentDateFormatted,
       startTime: form.value.startTime,
       endTime: form.value.endTime,
+      appointmentDate: appointmentDateFormatted,
       shiftName: selectedShift.value,
       clinicId: clinicId.value,
+      serviceId: selectedService.value,
     };
 
-    console.log("Payload crear cita:", payload);
+    console.log("Payload crear cita:", JSON.stringify(payload));
 
     await appointmentRepositoryImpl.create(payload);
     emit("created");

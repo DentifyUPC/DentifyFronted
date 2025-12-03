@@ -2,22 +2,25 @@ import { Appointment } from "@/modules/appointment/domain/entities/appointment.j
 
 export class AppointmentMapper {
     static toDomain(dto) {
-        if (!dto) return null;
+         if (!dto) return null;
+         
+         console.log('🔍 AppointmentMapper.toDomain - DTO recibido:', dto);
 
-        return new Appointment({
-            id: dto.id,
-            state: dto.state,
-            patientId: dto.patientId,
-            odontologistId: dto.odontologistId,
-            startTime: dto.startTime,
-            endTime: dto.endTime,
-            appointmentDate: dto.appointmentDate,
-            shiftName: dto.shiftName,
-            clinicId: dto.clinicId,
-            patientFirstName: dto.patientFirstName,
-            patientLastName: dto.patientLastName,
-        });
-    }
+         return new Appointment({
+             id: dto.id,
+             state: dto.state,
+             patientId: dto.patientId,
+             odontologistId: dto.odontologistId,
+             startTime: dto.startTime,
+             endTime: dto.endTime,
+             appointmentDate: dto.appointmentDate,
+             shiftName: dto.shiftName,
+             clinicId: dto.clinicId,
+             patientFirstName: dto.patientFirstName,
+             patientLastName: dto.patientLastName,
+             serviceId: dto.serviceId,
+         });
+     }
 
     static toDomainList(dtoList) {
         if (!Array.isArray(dtoList)) return [];
@@ -48,6 +51,7 @@ export class AppointmentMapper {
             appointmentDate: data.appointmentDate,
             shiftName: data.shiftName,
             clinicId: data.clinicId,
+            serviceId: data.serviceId,
         };
     }
 

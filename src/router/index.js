@@ -14,7 +14,17 @@ import ClinicPatientView from "@/modules/patientAttention/presentation/views/cli
 import ScheduleManagementView from "@/modules/clinicManagement/presentation/views/scheduleManagementView.vue";
 import AppointmentOdontologistView from "@/modules/appointment/presentation/views/appointment-odontologist-view.vue";
 import AppointmentPatientView from "@/modules/appointment/presentation/views/appointment-patient-view.vue";
-
+import ToothStatusView from "@/modules/patientAttention/presentation/views/tooth-status-view.vue";
+import PatientControlPanelView from "@/modules/patientAttention/presentation/views/patient-control-panel-view.vue";
+import AnamnesisView from "@/modules/patientAttention/presentation/views/anamnesis-view.vue";
+import PrescriptionView from "@/modules/patientAttention/presentation/views/prescription-view.vue";
+import OdontogramaView from "@/modules/patientAttention/presentation/views/odontograma-view.vue";
+import ClinicalRecordView from "@/modules/patientAttention/presentation/views/clinical-record-view.vue";
+import OdontologistScheduleView from "@/modules/practiceManagement/presentation/views/odontologist-schedule-view.vue";
+import AdminPaymentsView from "@/modules/payment/presentation/views/admin-payments-view.vue";
+import PatientPaymentsView from "@/modules/payment/presentation/views/patient-payments-view.vue";
+import PaypalPaymentReturn from "@/modules/payment/presentation/components/paypal-payment-return.vue";
+import AdminDashboardView from "@/modules/clinicManagement/presentation/views/admin-dashboard-view.vue";
 
 const routes = [
     { path: '/', redirect: '/login' },
@@ -38,6 +48,17 @@ const routes = [
             {path: 'schedule-management', name: 'schedule-management', component: ScheduleManagementView },
             {path: 'appointment-odontologist', name: 'appointment-odontologist', component: AppointmentOdontologistView},
             {path: 'appointment-patients', name: 'appointment-patients', component: AppointmentPatientView },
+            {path: 'tooth-status', name: 'tooth-status', component: ToothStatusView },
+            {path: 'patient-control/:patientId', name: 'patient-control-panel', component: PatientControlPanelView },
+            {path: 'patient-anamnesis/:patientId', name: 'patient-anamnesis', component: AnamnesisView},
+            {path: 'patient-prescription/:patientId', name: 'patient-prescription', component: PrescriptionView},
+            {path: 'patient-odontograma/:patientId', name: 'patient-odontograma', component: OdontogramaView},
+            {path: 'patient-clinical-record/:patientId', name: 'patient-clinical-record', component: ClinicalRecordView},
+            {path: 'odontologist-schedule', name: 'odontologist-schedule', component: OdontologistScheduleView},
+            {path: 'admin-payments', name: 'admin-payments', component: AdminPaymentsView},
+            {path: 'patient-payments', name: 'patient-payments', component: PatientPaymentsView},
+            {path: 'paypal-payment-return', name:'paypal-payment-return', component: PaypalPaymentReturn },
+            {path: 'admin-dashboard', name: 'admin-dashboard', component: AdminDashboardView},
 
         ],
     },

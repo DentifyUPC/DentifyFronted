@@ -11,6 +11,7 @@ export class Appointment {
                     clinicId = null,
                     patientFirstName = null,
                     patientLastName = null,
+                    serviceId = null,
                 } = {}) {
         this.id = id;
         this.state = state;
@@ -23,6 +24,7 @@ export class Appointment {
         this.clinicId = clinicId;
         this.patientFirstName = patientFirstName;
         this.patientLastName = patientLastName;
+        this.serviceId = serviceId;
     }
 
     get isValid() {
@@ -33,7 +35,8 @@ export class Appointment {
             this.endTime &&
             this.appointmentDate &&
             this.shiftName &&
-            this.clinicId
+            this.clinicId &&
+            this.serviceId
         );
     }
 
